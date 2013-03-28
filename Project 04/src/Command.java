@@ -1,0 +1,3 @@
+public enum Command {
+	WORLD, IMPORT, WHAT_IS_AT, WHAT, WHAT_IS_IN, DEBUG, QUIT, INVALID
+};
