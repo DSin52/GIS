@@ -1,28 +1,350 @@
-;this is a test
-;this is also a test
-world	1062650W	1000000W	341500N	413000N
+; Script 1
+;
+; Very basic testing of the simple search commands with a tiny DB.
+;
+; Specify boundaries of coordinate space:
+world	0794130W	0792630W	381500N	383000N
 
 GIS Program 
 
 dbFile: 	database.txt
 script: 	script.txt
-Start Time: 	Wed Mar 27 23:39:20 EDT 2013
+log: 		log.txt
+Start Time: 	Mon Apr 01 00:04:41 EDT 2013
 Quadtree children are printed in the order SW SE NE NW 
 --------------------------------------------------------------------------------
 
 Lattitude/longitude values in index entries are shown as signed integers, in total seconds.
 
 World boundaries are set to:
-			413000N
-	1062650W			1000000W
-			341500N
+			138600
+	-286890			-285990
+			137700
 --------------------------------------------------------------------------------
-;this is also a test
-Command 1:	import	records.txt
+;
+; Import some data:
+Command 1:	import	VA_Monterey.txt
 
-Imported Features by name:	9
+Imported Features by name:	63
 Longest probe sequence:		0
-Imported Locations:		9
+Imported Locations:		63
 --------------------------------------------------------------------------------
-Command 2	what_is_at	382430N	1043602W
+;
+;debug	world
+;
+; Check the location and name/state indices:
+Command 2:	debug	quad
 
+         *
+         [(-286627, 137860), 2346
+][(-286628, 137896), 7435
+]
+     @
+         [(-286479, 137945), 2612
+][(-286502, 138023), 3037
+][(-286523, 138047), 7309
+][(-286562, 138080), 8654
+]
+         *
+             [(-286433, 137756), 953
+][(-286358, 137773), 1201
+][(-286376, 137772), 6560
+][(-286356, 137772), 8081
+]
+             [(-286314, 137725), 2877
+][(-286224, 137708), 3720
+]
+         @
+                 [(-286304, 137827), 1361
+][(-286311, 137845), 4128
+]
+                 *
+             @
+                 [(-286253, 137904), 1513
+][(-286219, 137891), 5669
+][(-286229, 137889), 7818
+]
+                 *
+             *
+         [(-286212, 137722), 4975
+][(-286205, 137731), 5259
+]
+     @
+         *
+         [(-286438, 137942), 675
+][(-286269, 138108), 3593
+][(-286231, 138105), 4530
+][(-286374, 138012), 6434
+]
+ @
+             *
+             [(-286273, 138193), 6693
+]
+         @
+             *
+                 [(-286416, 138293), 7069
+]
+                 [(-286345, 138312), 4696
+][(-286337, 138287), 8513
+]
+             @
+                 [(-286353, 138352), 7188
+]
+                 [(-286392, 138367), 265
+][(-286393, 138370), 5991
+]
+         [(-286213, 138302), 4409
+]
+     @
+         *
+             [(-286329, 138414), 4819
+]
+                 [(-286301, 138424), 5419
+][(-286324, 138413), 5829
+]
+                 *
+             @
+                 [(-286269, 138486), 4256
+]
+                 [(-286319, 138445), 3438
+][(-286321, 138438), 6142
+]
+         @
+                 [(-286299, 138530), 2100
+][(-286316, 138492), 6940
+]
+                 [(-286231, 138536), 1822
+5102
+]
+             @
+                 [(-286263, 138580), 2223
+]
+                 [(-286313, 138576), 1670
+]
+                 *
+                 *
+             @
+                 [(-286379, 138600), 387
+][(-286342, 138593), 515
+][(-286358, 138591), 3162
+][(-286383, 138597), 7942
+]
+                 [(-286403, 138593), 1078
+][(-286390, 138593), 1946
+][(-286428, 138574), 6811
+]
+         *
+             [(-286561, 138234), 6294
+]
+             [(-286517, 138257), 7562
+]
+         @
+                 *
+                         [(-286484, 138266), 2473
+][(-286486, 138267), 8225
+]
+                         *
+                     @
+                         *
+                         [(-286490, 138284), 7682
+][(-286486, 138282), 8369
+][(-286491, 138282), 8792
+]
+                     *
+                 @
+                     [(-286449, 138309), 797
+]
+                     *
+             @
+                 *
+                 [(-286500, 138341), 3879
+]
+             [(-286638, 138326), 2754
+][(-286582, 138315), 4001
+]
+     @
+         [(-286612, 138532), 3314
+][(-286475, 138508), 5548
+]
+         *
+--------------------------------------------------------------------------------
+Command 3:	debug	hash
+
+123:	[New Hampden:VA, [6811]]
+126:	[White Run:VA, [5991]]
+311:	[Clover Creek:VA, [6560]]
+443:	[Bluegrass Valley:VA, [515]]
+467:	[Peck Run:VA, [4256]]
+471:	[Claylick Hollow:VA, [1201]]
+655:	[Monterey:VA, [7682]]
+690:	[Highland Wildlife Management Area:VA, [2612]]
+696:	[Bear Mountain:VA, [6434]]
+785:	[Frank Run:VA, [1946]]
+803:	[Little Doe Hill:VA, [3593]]
+939:	[Monterey Methodist Episcopal Church:VA, [8369]]
+963:	[Central Church:VA, [1078]]
+999:	[Trimble:VA, [7435]]
+1038:	[West Strait Creek:VA, [5829]]
+1065:	[Seybert Chapel:VA, [4696]]
+1093:	[Crab Run:VA, [1361]]
+1129:	[Seybert Hills:VA, [7188]]
+1136:	[Hamilton Chapel:VA, [2346]]
+1186:	[Vance Hollow:VA, [5669]]
+1225:	[Asbury Church:VA, [265]]
+1301:	[Mount Carlyle:VA, [953]]
+1369:	[Hupman Valley:VA, [2877]]
+1413:	[Meadow Draft:VA, [3720]]
+1438:	[Sounding Knob:VA, [7309]]
+1442:	[Simmons Run:VA, [4819]]
+1528:	[Town of Monterey:VA, [8792]]
+1574:	[Laurel Run:VA, [3438]]
+1641:	[Hannah Field Airport:VA, [6294]]
+1734:	[Burners Run:VA, [797]]
+1748:	[Possum Trot:VA, [6940]]
+1761:	[Southall Chapel:VA, [4975]]
+1766:	[Lantz Mountain:VA, [3314]]
+1785:	[Blue Grass School (historical):VA, [7942]]
+1875:	[Rich Hills:VA, [7069]]
+1891:	[Doe Hill:VA, [6693]]
+1913:	[Miracle Ridge:VA, [3879]]
+1914:	[Strait Creek School (historical):VA, [8513]]
+1946:	[New Salem Church:VA, [4128]]
+1980:	[Monterey Mountain:VA, [4001]]
+1995:	[Hightown Church:VA, [2754]]
+2088:	[Strait Creek:VA, [5102]]
+2104:	[Seldom Seen Hollow:VA, [4530]]
+2144:	[Thorny Bottom Church:VA, [5419]]
+2182:	[Clover Creek Presbyterian Church:VA, [8081]]
+2191:	[Swope Hollow:VA, [5259]]
+2192:	[Monterey District:VA, [8654]]
+2205:	[Key Run:VA, [3162]]
+2206:	[Union Chapel:VA, [5548]]
+2316:	[Jack Mountain:VA, [3037]]
+2436:	[Buck Hill:VA, [675]]
+2504:	[Elk Run:VA, [1670]]
+2505:	[Forks of Waters:VA, [1822]]
+2529:	[Trimble Knob:VA, [7562]]
+2617:	[Highland High School:VA, [2473]]
+2631:	[Barren Rock:VA, [4409]]
+2647:	[Gulf Mountain:VA, [2223]]
+2697:	[Davis Run:VA, [1513]]
+2753:	[Wooden Run:VA, [6142]]
+2880:	[Ginseng Mountain:VA, [2100]]
+2926:	[Blue Grass:VA, [387]]
+2957:	[Highland Elementary School:VA, [8225]]
+2993:	[Smith Field:VA, [7818]]
+--------------------------------------------------------------------------------
+;
+; Let's try some variations of a single-match name/state search:
+Command 4	what_is	Trimble Knob	VA
+
+7562:	Highland	0793517W	382417N
+--------------------------------------------------------------------------------
+;
+; Let's check the buffer pool:
+;debug	pool
+;
+; Let's try some variations of a single-match location search:
+Command 5:	what_is_at	382812N	0793156W
+
+The following features were found at 0793156W	382812N:
+6940:	Possum Trot	Highland	VA
+--------------------------------------------------------------------------------
+;
+; Let's check the buffer pool:
+Command 6:	debug	pool
+
+--------------------------------------------------------------------------------
+;
+; Let's try a few more name/state searches:
+Command 7	what_is	-l	Swope Hollow	VA
+
+Feature ID	:	1487758
+Feature Name:	:	Swope Hollow
+Feature Class	:	Valley
+State		:	VA
+State Code	:	51
+County		:	Highland
+County Code	:	091
+Lattitude	:	381531N
+Longitude	:	0793005W
+Elev in m	:	541
+Elev in f	:	1775
+USGS Quad	:	Monterey SE
+Date Created	:	09/28/1979
+--------------------------------------------------------------------------------
+Command 8	what_is	-l	Possum Trot	VA
+
+Feature ID	:	1496110
+Feature Name:	:	Possum Trot
+Feature Class	:	Populated Place
+State		:	VA
+State Code	:	51
+County		:	Highland
+County Code	:	091
+Lattitude	:	382812N
+Longitude	:	0793156W
+Elev in m	:	768
+Elev in f	:	2520
+USGS Quad	:	Monterey
+Date Created	:	09/28/1979
+--------------------------------------------------------------------------------
+Command 9	what_is	-l	Blue Grass	VA
+
+Feature ID	:	1481852
+Feature Name:	:	Blue Grass
+Feature Class	:	Populated Place
+State		:	VA
+State Code	:	51
+County		:	Highland
+County Code	:	091
+Lattitude	:	383000N
+Longitude	:	0793259W
+Elev in m	:	777
+Elev in f	:	2549
+USGS Quad	:	Monterey
+Date Created	:	09/28/1979
+--------------------------------------------------------------------------------
+;
+; Let's check the buffer pool:
+Command 10:	debug	pool
+
+--------------------------------------------------------------------------------
+;
+; Let's try a few more location searches:
+Command 11:	what_is_at	382145N	0793031W
+
+The following features were found at 0793031W	382145N:
+4530:	Seldom Seen Hollow	Highland	VA
+--------------------------------------------------------------------------------
+Command 12:	what_is_at	382442N	0793451W
+
+The following features were found at 0793451W	382442N:
+8792:	Town of Monterey	Highland	VA
+--------------------------------------------------------------------------------
+Command 13:	what_is_at	382607N	0793312W
+
+The following features were found at 0793312W	382607N:
+265:	Asbury Church	Highland	VA
+--------------------------------------------------------------------------------
+;
+; Let's check the buffer pool:
+Command 14:	debug	pool
+
+--------------------------------------------------------------------------------
+;
+; Let's try a two-match location search:
+Command 15:	what_is_at	382856N	0793031W
+
+The following features were found at 0793031W	382856N:
+1822:	Forks of Waters	Highland	VA
+5102:	Strait Creek	Highland	VA
+--------------------------------------------------------------------------------
+;
+; Let's check the buffer pool:
+Command 16:	debug	pool
+
+--------------------------------------------------------------------------------
+;
+; Exit
+quitting..

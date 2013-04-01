@@ -42,7 +42,7 @@ public class GISController {
 				cmdScript = new RandomAccessFile(cmdScriptFile, "r");
 
 				cmdProc = new CommandScriptProcessor(dataBaseFile,
-						cmdScriptFile, cmdScript, logWriter);
+						cmdScriptFile, logFile, cmdScript, logWriter);
 
 				cmdProc.execCommands();
 

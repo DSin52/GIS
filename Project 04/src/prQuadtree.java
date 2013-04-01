@@ -3,6 +3,8 @@
  * CS 3114
  * Project 03 PR QuadTree
  */
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Vector;
 
 //
@@ -206,7 +208,7 @@ public class prQuadtree<T extends Compare2D<? super T>> {
 
 		// If root is null, just create a new leaf node with element in it.
 		if (root == null) {
-			root = new prQuadLeaf(elem, 1);
+			root = new prQuadLeaf(elem, 4);
 			prQuadTreeSize++;
 			return root;
 		} else if (isLeaf(root)) {
@@ -630,5 +632,67 @@ public class prQuadtree<T extends Compare2D<? super T>> {
 			findHelper(internalRoot.SW, xLo, xHi, yLo, yHi, pointVec);
 		}
 
+	}
+
+	/**
+	 * This returns a String representation of the tree.
+	 */
+	public String toString() {
+		String test = "";
+		// printTreeHelper(root, " ");
+		return test;
+	}
+
+	/**
+	 * This is to help print out structure of tree
+	 * 
+	 * @param sRoot
+	 *            root to traverse from
+	 * @param padding
+	 *            padding indentation
+	 * @param logWriter
+	 *            FileWriter that rights to log output
+	 */
+	public void printTreeHelper(prQuadNode sRoot, String Padding,
+			FileWriter logWriter) {
+		// Check for empty leaf
+		try {
+			if (sRoot == null) {
+				logWriter.write(Padding + "*\r\n");
+				return;
+			}
+			// Check for and process SW and SE subtrees
+			if (sRoot.getClass().getName().equals("prQuadtree$prQuadInternal")) {
+				prQuadInternal p = (prQuadInternal) sRoot;
+				printTreeHelper(p.SW, Padding + "    ", logWriter);
+				printTreeHelper(p.SE, Padding + "    ", logWriter);
+			}
+			// Display indentation padding for current node
+			logWriter.write(Padding);
+			// Determine if at leaf or internal and display accordingly
+			if (sRoot.getClass().getName().equals("prQuadtree$prQuadLeaf")) {
+				prQuadLeaf p = (prQuadLeaf) sRoot;
+				for (int i = 0; i < p.Elements.size(); i++) {
+					// System.out.println("[(" + p.Elements.get(i).getX() + ", "
+					// + p.Elements.get(i).getY() + "), " + p.Elements.get(i)
+					// + "]\n");
+					logWriter.write("[(" + p.Elements.get(i).getX() + ", "
+							+ p.Elements.get(i).getY() + "), "
+							+ p.Elements.get(i) + "]");
+				}
+				logWriter.write("\r\n");
+			} else if (sRoot.getClass().getName()
+					.equals("prQuadtree$prQuadInternal")) {
+				logWriter.write("@\r\n");
+			}
+			// Check for and process NE and NW subtrees
+			if (sRoot.getClass().getName().equals("prQuadtree$prQuadInternal")) {
+				prQuadInternal p = (prQuadInternal) sRoot;
+				printTreeHelper(p.NE, Padding + "    ", logWriter);
+				printTreeHelper(p.NW, Padding + "    ", logWriter);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

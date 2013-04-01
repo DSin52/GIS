@@ -10,15 +10,17 @@ public class CommandScriptProcessor {
 	FileWriter logWriter;
 	RandomAccessFile cmdScript;
 	ScriptFileProcessor scriptProc;
+	String log;
 	CommandChecker checker;
 	String seperator = "---------------------------"
 			+ "---------------------------------" + "--------------------";
 
 	public CommandScriptProcessor(String dataBaseFile, String cmdScriptFile,
-			RandomAccessFile cmdScript, FileWriter logWriter) {
+			String log, RandomAccessFile cmdScript, FileWriter logWriter) {
 		this.dataBaseFile = dataBaseFile;
 		this.cmdScriptFile = cmdScriptFile;
 		this.cmdScript = cmdScript;
+		this.log = log;
 		this.logWriter = logWriter;
 		checker = new CommandChecker();
 	}
@@ -36,7 +38,7 @@ public class CommandScriptProcessor {
 					switch (checker.checkCommandIntegrity(command)) {
 
 					default:
-						logWriter.write("Error in script file command");
+						logWriter.write("Error in script file command\r\n");
 						break;
 
 					case WORLD:
@@ -44,6 +46,7 @@ public class CommandScriptProcessor {
 						logWriter.write("GIS Program \r\n\r\n");
 						logWriter.write("dbFile: \t" + dataBaseFile + "\r\n");
 						logWriter.write("script: \t" + cmdScriptFile + "\r\n");
+						logWriter.write("log: \t\t" + log + "\r\n");
 						SimpleDateFormat sd = new SimpleDateFormat(
 								"E MMM dd HH:mm:ss zzz yyyy");
 						Date date = new Date();
@@ -53,18 +56,25 @@ public class CommandScriptProcessor {
 								.write("Quadtree children are printed in the order SW SE NE NW \r\n"
 										+ seperator + "\r\n\r\n");
 						scriptProc = new ScriptFileProcessor(dataBaseFile,
-								logWriter, checker.convertToLong(command[1]),
-								checker.convertToLong(command[2]),
-								checker.convertToLat(command[3]),
-								checker.convertToLat(command[4]));
+								logWriter,
+								checker.convertToSecondsLong(command[1]),
+								checker.convertToSecondsLong(command[2]),
+								checker.convertToSecondsLat(command[3]),
+								checker.convertToSecondsLat(command[4]));
 						logWriter
 								.write("Lattitude/longitude values in index entries are shown as signed integers, in total seconds.\r\n\r\n");
 						logWriter.write("World boundaries are set to:\r\n");
-						logWriter.write("\t\t\t" + command[4] + "\r\n");
-						logWriter.write("\t" + command[1] + "\t\t\t"
-								+ command[2] + "\r\n");
-						logWriter.write("\t\t\t" + command[3] + "\r\n"
-								+ seperator + "\r\n");
+						logWriter.write("\t\t\t"
+								+ scriptProc.convertToSecondsLat(command[4])
+								+ "\r\n");
+						logWriter.write("\t"
+								+ scriptProc.convertToSecondsLong(command[1])
+								+ "\t\t\t"
+								+ scriptProc.convertToSecondsLong(command[2])
+								+ "\r\n");
+						logWriter.write("\t\t\t"
+								+ scriptProc.convertToSecondsLat(command[3])
+								+ "\r\n" + seperator + "\r\n");
 						break;
 
 					case IMPORT:
@@ -75,17 +85,97 @@ public class CommandScriptProcessor {
 								.write("Imported Features by name:\t"
 										+ scriptProc.getImportedFilesNum()
 										+ "\r\nLongest probe sequence:\t\t0\r\nImported Locations:\t\t"
-										+ scriptProc.getImportedFilesNum()
-										+ "\r\n" + seperator + "\r\n");
+										+ scriptProc.hashTableSize() + "\r\n"
+										+ seperator + "\r\n");
 						break;
 
 					case WHAT_IS_AT:
+						logWriter.write("Command " + cmdCounter++ + ":" + "\t"
+								+ command[0] + "\t" + command[1] + "\t"
+								+ command[2] + "\r\n\r\n");
+						scriptProc.whatIsAt(command[2], command[1]);
+						logWriter.write(seperator + "\r\n");
+						break;
+					case WHAT_IS_AT_C:
+						logWriter.write("Command " + cmdCounter++ + ":" + "\t"
+								+ command[0] + "\t" + command[1] + "\t"
+								+ command[2] + "\t" + command[3] + "\r\n\r\n");
+						scriptProc.whatIsAtC(command[3], command[2]);
+						logWriter.write(seperator + "\r\n");
+						break;
+					case WHAT_IS_AT_L:
+						logWriter.write("Command " + cmdCounter++ + ":" + "\t"
+								+ command[0] + "\t" + command[1] + "\t"
+								+ command[2] + "\t" + command[3] + "\r\n\r\n");
+						scriptProc.whatIsAtL(command[3], command[2]);
+						logWriter.write(seperator + "\r\n");
+						break;
+					case WHAT_IS_IN:
+						logWriter.write("Command " + cmdCounter++ + "\t"
+								+ command[0] + "\t" + command[1] + "\t"
+								+ command[2] + "\t" + command[3] + "\t"
+								+ command[4] + "\r\n\r\n");
+						scriptProc.whatIsInFinder(command[1], command[2],
+								command[3], command[4]);
+						logWriter.write(seperator + "\r\n");
+						break;
+					case WHAT_IS_IN_L:
+						logWriter.write("Command " + cmdCounter++ + "\t"
+								+ command[0] + "\t" + command[1] + "\t"
+								+ command[2] + "\t" + command[3] + "\t"
+								+ command[4] + "\t" + command[5] + "\r\n\r\n");
+						scriptProc.whatIsInLFinder(command[2], command[3],
+								command[4], command[5]);
+						logWriter.write(seperator + "\r\n");
+						break;
+					case WHAT_IS_IN_C:
+						logWriter.write("Command " + cmdCounter++ + "\t"
+								+ command[0] + "\t" + command[1] + "\t"
+								+ command[2] + "\t" + command[3] + "\t"
+								+ command[4] + "\t" + command[5] + "\r\n\r\n");
+
+						scriptProc.whatIsInCFinder(command[2], command[3],
+								command[4], command[5]);
+						logWriter.write(seperator + "\r\n");
+						break;
+					case WHAT_IS:
 						logWriter.write("Command " + cmdCounter++ + "\t"
 								+ command[0] + "\t" + command[1] + "\t"
 								+ command[2] + "\r\n\r\n");
 
-						scriptProc.findCoordinate(command[2], command[1]);
+						scriptProc.whatIsFinder(command[1], command[2]);
+						logWriter.write(seperator + "\r\n");
 						break;
+					case WHAT_IS_L:
+						logWriter.write("Command " + cmdCounter++ + "\t"
+								+ command[0] + "\t" + command[1] + "\t"
+								+ command[2] + "\t" + command[3] + "\r\n\r\n");
+						scriptProc.whatIsLFinder(command[2], command[3]);
+						logWriter.write(seperator + "\r\n");
+						break;
+					case DEBUG_QUAD:
+						logWriter.write("Command " + cmdCounter++ + ":\t"
+								+ command[0] + "\t" + command[1] + "\r\n\r\n");
+						scriptProc.debugQuad();
+						logWriter.write(seperator + "\r\n");
+						break;
+					case DEBUG_HASH:
+						logWriter.write("Command " + cmdCounter++ + ":\t"
+								+ command[0] + "\t" + command[1] + "\r\n\r\n");
+
+						scriptProc.debugHash();
+						logWriter.write(seperator + "\r\n");
+
+						break;
+					case DEBUG_POOL:
+						logWriter.write("Command " + cmdCounter++ + ":\t"
+								+ command[0] + "\t" + command[1] + "\r\n\r\n");
+
+						logWriter.write(seperator + "\r\n");
+
+						break;
+					case QUIT:
+						logWriter.write("quitting..");
 					}
 				}
 			}

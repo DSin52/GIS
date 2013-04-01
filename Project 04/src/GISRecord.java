@@ -238,4 +238,16 @@ public class GISRecord {
 				+ dateEdited;
 	}
 
+	public String[] gisFields() {
+		String[] fieldArray = { "Feature ID", "Feature Name:", "Feature Class",
+				"State	", "State Code", "County	",
+				"County Code", "Lattitude",
+				"Longitude", "",
+				"", "",
+				"", "",
+				"", "Elev in m",
+				"Elev in f", "USGS Quad", "Date Created",
+				"Date Edited" };
+		return fieldArray;
+	}
 }
