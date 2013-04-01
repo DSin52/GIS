@@ -90,7 +90,7 @@ public class ScriptFileProcessor {
 				// System.out.println(hashTable.elfHash(gRec.fName
 				// + gRec.stateAlphCode)
 				// % hashTable.table.length);
-				hashTable.put(gRec.fName + ":" + gRec.stateAlphCode,
+				hashTable.insert(gRec.fName + ":" + gRec.stateAlphCode,
 						filePointerRef);
 				if (tree.find(gisCoord) != null) {
 					tree.find(gisCoord).getList().add(filePointerRef);

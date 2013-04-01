@@ -81,12 +81,13 @@ public class CommandScriptProcessor {
 						logWriter.write("Command " + cmdCounter++ + ":\t"
 								+ command[0] + "\t" + command[1] + "\r\n\r\n");
 						scriptProc.writeToDB(command[1]);
-						logWriter
-								.write("Imported Features by name:\t"
-										+ scriptProc.getImportedFilesNum()
-										+ "\r\nLongest probe sequence:\t\t0\r\nImported Locations:\t\t"
-										+ scriptProc.hashTableSize() + "\r\n"
-										+ seperator + "\r\n");
+						logWriter.write("Imported Features by name:\t"
+								+ scriptProc.getImportedFilesNum()
+								+ "\r\nLongest probe sequence:\t\t"
+								+ scriptProc.hashTable.getProbeSequence()
+								+ "\r\nImported Locations:\t\t"
+								+ scriptProc.hashTable.getFilled() + "\r\n"
+								+ seperator + "\r\n");
 						break;
 
 					case WHAT_IS_AT:
@@ -162,6 +163,12 @@ public class CommandScriptProcessor {
 					case DEBUG_HASH:
 						logWriter.write("Command " + cmdCounter++ + ":\t"
 								+ command[0] + "\t" + command[1] + "\r\n\r\n");
+						logWriter
+								.write("Format of display is \r\nSlot number: data record \r\nCurrent table size is: "
+										+ scriptProc.hashTable.size()
+										+ "\r\nNumber of Elements in table is "
+										+ scriptProc.hashTable.getFilled()
+										+ "\r\n\r\n");
 
 						scriptProc.debugHash();
 						logWriter.write(seperator + "\r\n");
