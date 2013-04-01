@@ -1,18 +1,17 @@
 public class HashTable {
 
-	private HashEntry[] array; // The array of elements
-	private int currentSize; // The number of occupied cells
+	private HashEntry[] array;
+	private int currentSize;
 	private int[] sizeArrayCheat = new int[] { 1019, 2027, 4079, 8123, 16267,
 			32503, 65011, 130027, 260111, 520279, 1040387, 2080763, 4161539,
 			8323151, 16646323 };
 	private int probeSequence;
 
-	public HashTable() { /* Figure 5.15 */
+	public HashTable() {
 		this(1019);
 	}
 
-	public HashTable(int size) { /* Figure 5.15 */
-		// allocateArray(size);
+	public HashTable(int size) {
 		array = new HashEntry[1019];
 		makeEmpty();
 		probeSequence = 1;
@@ -26,14 +25,14 @@ public class HashTable {
 		return this.probeSequence;
 	}
 
-	public void makeEmpty() { /* Figure 5.15 */
+	public void makeEmpty() {
 		currentSize = 0;
 		for (int i = 0; i < array.length; i++) {
 			array[i] = null;
 		}
 	}
 
-	public boolean contains(String key) { /* Figure 5.16 */
+	public boolean contains(String key) {
 		int currentPos = findPos(key);
 		if (isActive(currentPos)) {
 			return true;
@@ -41,7 +40,7 @@ public class HashTable {
 		return false;
 	}
 
-	public void insert(String key, long filePointerRef) { /* Figure 5.17 */
+	public void insert(String key, long filePointerRef) {
 		int currentPos = findPos(key);
 		if (isActive(currentPos)) {
 			return;
@@ -64,7 +63,7 @@ public class HashTable {
 		return array[currentPos] != null && array[currentPos].isActive;
 	}
 
-	public void remove(String key) { /* Figure 5.17 */
+	public void remove(String key) {
 		int currentPos = findPos(key);
 		if (isActive(currentPos)) {
 			array[currentPos].isActive = false;
@@ -72,7 +71,7 @@ public class HashTable {
 		currentSize--;
 	}
 
-	private void allocateArray(int arraySize) { /* Figure 5.15 */
+	private void allocateArray(int arraySize) {
 		int cheat = -1;
 		for (int i = 0; i < sizeArrayCheat.length; i++) {
 			if (arraySize == sizeArrayCheat[i]) {
@@ -82,18 +81,28 @@ public class HashTable {
 		array = new HashEntry[sizeArrayCheat[cheat]];
 	}
 
-	private int findPos(String key) { /* Figure 5.16 */
-		int offset = 1;
+	private int findPos(String key) {
+		int offset = 0;
 		int hashedKey = elfHash(key);
-		while (array[hashedKey] != null && !array[hashedKey].key.equals(key)) {
-			offset = ((((int) (Math.pow(offset, 2)) + offset) / 2) % array.length);
-			hashedKey = (hashedKey + offset);
-			setProbeSequence(++probeSequence);
+		// while (array[hashedKey] != null && !array[hashedKey].key.equals(key))
+		// {
+		// offset += ((((int) (Math.pow(offset, 2)) + offset) / 2) %
+		// array.length);
+		// hashedKey = (hashedKey + offset);
+		// // setProbeSequence(++probeSequence);
+		// }
+		// return hashedKey;
+		int incHash = hashedKey;
+		for (int i = 0; i < array.length && array[incHash] != null
+				&& !array[incHash].key.equals(key); i++) {
+			offset = (int) ((Math.pow(i, 2) + i) / 2) % array.length;
+			incHash = hashedKey + offset;
 		}
-		return hashedKey;
+		return incHash;
+
 	}
 
-	private void rehash() { /* Figure 5.22 */
+	private void rehash() {
 		HashEntry[] oldArray = array;
 		allocateArray(oldArray.length);
 		currentSize = 0;
@@ -115,15 +124,15 @@ public class HashTable {
 	}
 
 	public int elfHash(String toHash) {
-		int hashValue = 0;
+		long hashValue = 0;
 		for (int Pos = 0; Pos < toHash.length(); Pos++) { // use all elements
 			hashValue = (hashValue << 4) + toHash.charAt(Pos); // shift/mix
-			int hiBits = hashValue & 0xF0000000; // get high nybble
+			long hiBits = hashValue & 0xF0000000L; // get high nybble
 			if (hiBits != 0)
 				hashValue ^= hiBits >> 24; // xor high nybble with second nybble
 			hashValue &= ~hiBits; // clear high nybble
 		}
-		return (hashValue % array.length);
+		return (((int) hashValue) % array.length);
 	}
 
 	public String toString() {
@@ -141,22 +150,6 @@ public class HashTable {
 	public int getFilled() {
 		return currentSize;
 	}
-
-	// private static int nextPrime(int n) { /* See online code */
-	// }
-	//
-	// private static boolean isPrime(int n) { /* See online code */
-	// if (n % 2 == 0) {
-	// return false;
-	// } else {
-	// for (int i = 3; i * i <= n; i += 2) {
-	// if (n % i == 0) {
-	// return false;
-	// }
-	// }
-	// return true;
-	// }
-	// }
 
 	public int size() {
 		return array.length;

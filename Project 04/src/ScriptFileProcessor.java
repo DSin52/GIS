@@ -92,6 +92,8 @@ public class ScriptFileProcessor {
 				// % hashTable.table.length);
 				hashTable.insert(gRec.fName + ":" + gRec.stateAlphCode,
 						filePointerRef);
+				// hashTable.insert(gRec.fName + gRec.stateAlphCode,
+				// filePointerRef);
 				if (tree.find(gisCoord) != null) {
 					tree.find(gisCoord).getList().add(filePointerRef);
 				} else {
