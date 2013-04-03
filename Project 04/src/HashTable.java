@@ -45,11 +45,13 @@ public class HashTable {
 		if (isActive(currentPos)) {
 			return;
 		}
-
-		array[currentPos] = new HashEntry(key, filePointerRef, true);
-		if (++currentSize > (.7 * array.length)) {
+		if (currentPos >= (.7 * array.length)) {
 			rehash();
 		}
+		array[currentPos] = new HashEntry(key, filePointerRef, true);
+		// if (++currentSize > (.7 * array.length)) {
+		// rehash();
+		// }
 	}
 
 	/**
@@ -71,14 +73,15 @@ public class HashTable {
 		currentSize--;
 	}
 
-	private void allocateArray(int arraySize) {
-		int cheat = -1;
-		for (int i = 0; i < sizeArrayCheat.length; i++) {
+	private int allocateArray(int arraySize) {
+		// int cheat = -1;
+		for (int i = 0; i < sizeArrayCheat.length - 1; i++) {
 			if (arraySize == sizeArrayCheat[i]) {
-				cheat = i;
+				 array = new HashEntry[sizeArrayCheat[i + 1]];
+				//return (i + 1);
 			}
 		}
-		array = new HashEntry[sizeArrayCheat[cheat]];
+		return -1;
 	}
 
 	private int findPos(String key) {
@@ -93,6 +96,7 @@ public class HashTable {
 		// }
 		// return hashedKey;
 		int incHash = hashedKey;
+
 		for (int i = 0; i < array.length && array[incHash] != null
 				&& !array[incHash].key.equals(key); i++) {
 			offset = (int) ((Math.pow(i, 2) + i) / 2) % array.length;
@@ -104,11 +108,12 @@ public class HashTable {
 
 	private void rehash() {
 		HashEntry[] oldArray = array;
+		// oldArray = array.clone();
 		allocateArray(oldArray.length);
-		currentSize = 0;
+		// currentSize = 0;
 
 		for (int i = 0; i < oldArray.length; i++) {
-			if (oldArray[i] != null && oldArray[i].isActive) {
+			if (array[i] != null && array[i].isActive) {
 				insert(oldArray[i].key, oldArray[i].value);
 			}
 		}

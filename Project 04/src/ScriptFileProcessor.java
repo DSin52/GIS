@@ -41,6 +41,7 @@ public class ScriptFileProcessor {
 				String gis = record.readLine();
 				// String[] gisRecord = gis.split("[|]");
 				GISRecord gRec = createGIS(gis);
+				// System.out.println(gRec.fName);
 				if (checkBounds(gRec.primLongDMS, gRec.primLatDMS) == true) {
 					dataWriter.write(gis + "\n");
 					importedFiles++;
@@ -89,11 +90,10 @@ public class ScriptFileProcessor {
 						convertToSecondsLat(gRec.primLatDMS));
 				// System.out.println(hashTable.elfHash(gRec.fName
 				// + gRec.stateAlphCode)
+				System.out.println(gRec.fName);
 				// % hashTable.table.length);
 				hashTable.insert(gRec.fName + ":" + gRec.stateAlphCode,
 						filePointerRef);
-				// hashTable.insert(gRec.fName + gRec.stateAlphCode,
-				// filePointerRef);
 				if (tree.find(gisCoord) != null) {
 					tree.find(gisCoord).getList().add(filePointerRef);
 				} else {
