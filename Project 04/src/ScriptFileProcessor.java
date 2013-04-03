@@ -83,15 +83,11 @@ public class ScriptFileProcessor {
 			dataAccess.readLine();
 			while (dataAccess.getFilePointer() < dataAccess.length()) {
 				long filePointerRef = dataAccess.getFilePointer();
-				// String[] gisRecord = dataAccess.readLine().split("[|]");
 				GISRecord gRec = createGIS(dataAccess.readLine());
 				Coordinates gisCoord = new Coordinates(
 						convertToSecondsLong(gRec.primLongDMS),
 						convertToSecondsLat(gRec.primLatDMS));
-				// System.out.println(hashTable.elfHash(gRec.fName
-				// + gRec.stateAlphCode)
-				System.out.println(gRec.fName);
-				// % hashTable.table.length);
+				//
 				hashTable.insert(gRec.fName + ":" + gRec.stateAlphCode,
 						filePointerRef);
 				if (tree.find(gisCoord) != null) {
@@ -373,6 +369,7 @@ public class ScriptFileProcessor {
 						dataAccess.seek(filePointer);
 						String gRef = dataAccess.readLine();
 						String[] gArray = gRef.split("[|]");
+						System.out.println(gRef);
 						GISRecord gRec = createGIS(gRef);
 						int j;
 						for (j = 0; j < 19; j++) {
