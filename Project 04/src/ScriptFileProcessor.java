@@ -13,6 +13,7 @@ public class ScriptFileProcessor {
 	private long longMin;
 	private long longMax;
 	private long latMin;
+	BufferPool pool;
 	HashTable hashTable;
 	private long latMax;
 	private int importedFiles;
@@ -25,6 +26,7 @@ public class ScriptFileProcessor {
 		this.logWriter = logWriter;
 		this.longMin = longMin;
 		importedFiles = 0;
+		pool = new BufferPool();
 		this.longMax = longMax;
 		hashTable = new HashTable();
 		this.latMin = latMin;
@@ -84,9 +86,6 @@ public class ScriptFileProcessor {
 
 	public void addCoordinates() {
 		try {
-			// tree = new prQuadtree<Coordinates>(longMin, longMax, latMin,
-			// latMax);
-			// hashTable = new HashTable();
 			RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
 			dataAccess.readLine();
 			while (dataAccess.getFilePointer() < dataAccess.length()) {
@@ -147,7 +146,9 @@ public class ScriptFileProcessor {
 					long filePointer = treeRefCoord.getList().get(i);
 					dataAccess.seek(filePointer);
 					// String[] splitter = dataAccess.readLine().split("[|]");
-					GISRecord gRec = createGIS(dataAccess.readLine());
+					String poolRef = dataAccess.readLine();
+					pool.insertAtHead(filePointer + ":\t" + poolRef);
+					GISRecord gRec = createGIS(poolRef);
 					logWriter.write(tree.find(gisCoord).getList().get(i)
 							+ ":\t" + gRec.fName + "\t" + gRec.countyName
 							+ "\t" + gRec.stateAlphCode + "\r\n");
@@ -183,9 +184,10 @@ public class ScriptFileProcessor {
 				for (int i = 0; i < treeRefCoord.getList().size(); i++) {
 					long filePointer = treeRefCoord.getList().get(i);
 					dataAccess.seek(filePointer);
-					String gRef = dataAccess.readLine();
-					String[] gArray = gRef.split("[|]");
-					GISRecord gRec = createGIS(gRef);
+					String poolRef = dataAccess.readLine();
+					pool.insertAtHead(filePointer + ":\t" + poolRef);
+					String[] gArray = poolRef.split("[|]");
+					GISRecord gRec = createGIS(poolRef);
 					for (int j = 0; j < 19; j++) {
 						if (gArray[j].length() > 0
 								&& gRec.gisFields()[j].length() > 0) {
@@ -353,7 +355,9 @@ public class ScriptFileProcessor {
 						dataAccess.seek(offset);
 						// String[] splitter =
 						// dataAccess.readLine().split("[|]");
-						GISRecord gRec = createGIS(dataAccess.readLine());
+						String poolRef = dataAccess.readLine();
+						pool.insertAtHead(offset + ":\t" + poolRef);
+						GISRecord gRec = createGIS(poolRef);
 						logWriter.write(gRec.fName + "\t" + gRec.stateAlphCode
 								+ "\t" + gRec.primLatDMS + "\t"
 								+ gRec.primLongDMS + "\r\n");
@@ -398,10 +402,11 @@ public class ScriptFileProcessor {
 					for (int i = 0; i < treeRefCoord.getList().size(); i++) {
 						long filePointer = treeRefCoord.getList().get(i);
 						dataAccess.seek(filePointer);
-						String gRef = dataAccess.readLine();
-						String[] gArray = gRef.split("[|]");
-						System.out.println(gRef);
-						GISRecord gRec = createGIS(gRef);
+						String poolRef = dataAccess.readLine();
+						pool.insertAtHead(filePointer + ":\t" + poolRef);
+						String[] gArray = poolRef.split("[|]");
+						// System.out.println(gRef);
+						GISRecord gRec = createGIS(poolRef);
 						int j;
 						for (j = 0; j < 19; j++) {
 							if (gArray[j].length() > 0
@@ -482,11 +487,18 @@ public class ScriptFileProcessor {
 
 	public void whatIsFinder(String feature, String state) {
 		long offset = hashTable.get(feature + ":" + state);
+
 		try {
+			if (offset == -1) {
+				logWriter.write("No records match " + feature + " and " + state
+						+ "\r\n");
+				return;
+			}
 			RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
 			dataAccess.seek(offset);
-			String gRef = dataAccess.readLine();
-			GISRecord gRec = createGIS(gRef);
+			String poolRef = dataAccess.readLine();
+			pool.insertAtHead(offset + ":\t" + poolRef);
+			GISRecord gRec = createGIS(poolRef);
 			logWriter.write(offset + ":\t" + gRec.countyName + "\t"
 					+ gRec.primLongDMS + "\t" + gRec.primLatDMS + "\r\n");
 			dataAccess.close();
@@ -507,9 +519,10 @@ public class ScriptFileProcessor {
 		try {
 			dataAccess = new RandomAccessFile(dataFile, "r");
 			dataAccess.seek(offset);
-			String gRef = dataAccess.readLine();
-			String[] gArray = gRef.split("[|]");
-			GISRecord gRec = createGIS(gRef);
+			String poolRef = dataAccess.readLine();
+			String[] gArray = poolRef.split("[|]");
+			pool.insertAtHead(offset + ":\t" + poolRef);
+			GISRecord gRec = createGIS(poolRef);
 			for (int j = 0; j < 19; j++) {
 				if (gArray[j].length() > 0 && gRec.gisFields()[j].length() > 0) {
 					logWriter.write(gRec.gisFields()[j] + "\t:\t" + gArray[j]
@@ -542,4 +555,12 @@ public class ScriptFileProcessor {
 
 	}
 
+	public void debugPool() {
+		try {
+			logWriter.write(pool.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

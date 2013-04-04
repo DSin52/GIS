@@ -69,8 +69,13 @@ public class HashTable {
 		if (entries[position] == null) {
 			System.out.println("NULL");
 		}
-		System.out.println(key);
-		return entries[position].getValue();
+		System.out.println("POSITION: " + position);
+		try {
+			return entries[position].getValue();
+		} catch (NullPointerException e) {
+			return -1;
+		}
+
 	}
 
 	public int size() {
@@ -82,21 +87,15 @@ public class HashTable {
 		int offset = 0;
 		int hashedKey = elfHash(key);
 		int incHash = (hashedKey % entries.length);
-		int newProbe = 0;
-		System.out.println("test: " + hashedKey + " " + incHash);
 		for (int i = 0; i < entries.length && entries[incHash] != null
 				&& !entries[incHash].getKey().equals(key); i++) {
 			offset = (int) ((Math.pow(i, 2) + i) / 2) % entries.length;
 			incHash = (hashedKey + offset);
-			newProbe++;
 			if (incHash >= entries.length) {
 				incHash = incHash - entries.length;
 			}
 
-		}
-
-		if (newProbe > probeSequence) {
-			probeSequence = newProbe;
+			probeSequence = Math.max(probeSequence, i);
 		}
 
 		return incHash;

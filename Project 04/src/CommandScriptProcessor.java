@@ -177,12 +177,23 @@ public class CommandScriptProcessor {
 					case DEBUG_POOL:
 						logWriter.write("Command " + cmdCounter++ + ":\t"
 								+ command[0] + "\t" + command[1] + "\r\n\r\n");
-
-						logWriter.write(seperator + "\r\n");
-
+						logWriter.write("MRU\r\n");
+						scriptProc.debugPool();
+						logWriter.write("LRU\r\n" + seperator + "\r\n");
 						break;
 					case QUIT:
-						logWriter.write("quitting..");
+						logWriter
+								.write("Command "
+										+ cmdCounter++
+										+ ":\t"
+										+ command[0]
+										+ "\r\n\r\nTerminating execution of commands.\r\n");
+						SimpleDateFormat sdEnd = new SimpleDateFormat(
+								"E MMM dd HH:mm:ss zzz yyyy");
+						Date endDate = new Date();
+						logWriter.write("End Time: " + sdEnd.format(endDate)
+								+ "\r\n" + seperator);
+
 					}
 				}
 			}
