@@ -35,8 +35,13 @@ public class ScriptFileProcessor {
 	public void writeToDB(String recordFile) {
 		try {
 			RandomAccessFile record = new RandomAccessFile(recordFile, "r");
-			dataWriter = new FileWriter(dataFile);
-			dataWriter.write(record.readLine() + "\n");
+			dataWriter = new FileWriter(dataFile, true);
+			if (dataFile.length() == 0) {
+				dataWriter.write(record.readLine() + "\n");
+			}
+			if (dataFile.length() > 0) {
+				record.readLine();
+			}
 			while (record.getFilePointer() < record.length()) {
 				String gis = record.readLine();
 				// String[] gisRecord = gis.split("[|]");
@@ -79,6 +84,9 @@ public class ScriptFileProcessor {
 
 	public void addCoordinates() {
 		try {
+			// tree = new prQuadtree<Coordinates>(longMin, longMax, latMin,
+			// latMax);
+			// hashTable = new HashTable();
 			RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
 			dataAccess.readLine();
 			while (dataAccess.getFilePointer() < dataAccess.length()) {
@@ -87,11 +95,23 @@ public class ScriptFileProcessor {
 				Coordinates gisCoord = new Coordinates(
 						convertToSecondsLong(gRec.primLongDMS),
 						convertToSecondsLat(gRec.primLatDMS));
-				//
+
 				hashTable.insert(gRec.fName + ":" + gRec.stateAlphCode,
 						filePointerRef);
 				if (tree.find(gisCoord) != null) {
-					tree.find(gisCoord).getList().add(filePointerRef);
+					boolean isContained = false;
+					for (int i = 0; i < tree.find(gisCoord).offsets.size(); i++) {
+						dataAccess.seek(tree.find(gisCoord).offsets.get(i));
+						GISRecord tester = createGIS(dataAccess.readLine());
+						if (gRec.fId.equals(tester.fId)) {
+							isContained = true;
+						}
+					}
+					if (!isContained) {
+						tree.find(gisCoord).getList().add(filePointerRef);
+					}
+					dataAccess.seek(filePointerRef);
+					dataAccess.readLine();
 				} else {
 					tree.insert(gisCoord);
 					tree.find(gisCoord).getList().add(filePointerRef);
@@ -313,13 +333,19 @@ public class ScriptFileProcessor {
 						+ ")\r\n");
 				return;
 			} else {
-				logWriter.write("\tThe following " + coordVec.size()
-						+ " features were found in (" + latString + " +/- "
-						+ latDif + ", " + longString + " +/- " + longDif
-						+ ")\r\n");
+
 				RandomAccessFile dataAccess = new RandomAccessFile(dataFile,
 						"r");
 				Coordinates coordRef;
+				int numCoords = 0;
+				for (int i = 0; i < coordVec.size(); i++) {
+					Coordinates coords = coordVec.get(i);
+					numCoords += coords.offsets.size();
+				}
+				logWriter.write("\tThe following " + numCoords
+						+ " features were found in (" + latString + " +/- "
+						+ latDif + ", " + longString + " +/- " + longDif
+						+ ")\r\n");
 				for (int i = 0; i < coordVec.size(); i++) {
 					coordRef = coordVec.get(i);
 					for (long offset : coordRef.offsets) {
@@ -357,7 +383,12 @@ public class ScriptFileProcessor {
 						+ ")\r\n");
 				return;
 			} else {
-				logWriter.write("\tThe following " + coordVec.size()
+				int numCoords = 0;
+				for (int i = 0; i < coordVec.size(); i++) {
+					Coordinates coords = coordVec.get(i);
+					numCoords += coords.offsets.size();
+				}
+				logWriter.write("\tThe following " + numCoords
 						+ " features were found in (" + latString + " +/- "
 						+ latDif + ", " + longString + " +/- " + longDif
 						+ ")\r\n");

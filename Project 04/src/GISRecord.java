@@ -240,14 +240,30 @@ public class GISRecord {
 
 	public String[] gisFields() {
 		String[] fieldArray = { "Feature ID", "Feature Name:", "Feature Class",
-				"State	", "State Code", "County	",
-				"County Code", "Lattitude",
-				"Longitude", "",
-				"", "",
-				"", "",
-				"", "Elev in m",
-				"Elev in f", "USGS Quad", "Date Created",
-				"Date Edited" };
+				"State	", "State Code", "County	", "County Code", "Lattitude",
+				"Longitude", "", "", "", "", "", "", "Elev in m", "Elev in f",
+				"USGS Quad", "Date Created", "Date Edited" };
 		return fieldArray;
+	}
+
+	public boolean equals(GISRecord other) {
+		if (fId.equals(other.fId) && fName.equals(other.fName)
+				&& stateAlphCode.equals(other.stateAlphCode)
+				&& stateNumCode.equals(other.stateNumCode)
+				&& countyName.equals(other.countyName)
+				&& countyNum.equals(other.countyNum)
+				&& primLatDMS.equals(other.primLatDMS)
+				&& primLongDMS.equals(other.primLongDMS)
+				&& latDMSSrc.equals(other.latDMSSrc)
+				&& longDMSSrc.equals(other.longDMSSrc)
+				&& latDecSrc.equals(other.latDecSrc)
+				&& longDecSrc.equals(other.longDecSrc)
+				&& elevMeters.equals(other.elevMeters)
+				&& elevFeet.equals(other.elevFeet)
+				&& mapName.equals(other.mapName)
+				&& dateCreated.equals(other.dateCreated)) {
+			return true;
+		}
+		return false;
 	}
 }

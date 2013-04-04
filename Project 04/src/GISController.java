@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,6 +40,10 @@ public class GISController {
 				System.exit(1);
 			}
 			try {
+				File file = new File(dataBaseFile);
+				if (file.exists()) {
+					file.delete();
+				}
 				cmdScript = new RandomAccessFile(cmdScriptFile, "r");
 
 				cmdProc = new CommandScriptProcessor(dataBaseFile,
