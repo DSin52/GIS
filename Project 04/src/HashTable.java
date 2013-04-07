@@ -1,3 +1,12 @@
+/**
+ * This class represents the hash table functionality. It uses an array for its
+ * data. Its probe sequence is quadratic of the form: (n^2 + n) / 2. The
+ * resizing of the table is of the prime for 4k + 3 to ensure that no collisions
+ * are unaccounted for.
+ * 
+ * @author Divit Singh divit52
+ * 
+ */
 public class HashTable {
 	private HashEntry[] entries;
 	private int currentSize;
@@ -6,16 +15,33 @@ public class HashTable {
 			8323151, 16646323 };
 	private int probeSequence;
 
+	/**
+	 * Creates table with size of 1019 initially.
+	 */
 	public HashTable() {
 		this(1019);
 	}
 
+	/**
+	 * Creates table with size specified
+	 * 
+	 * @param tableSize
+	 *            size of table
+	 */
 	public HashTable(int tableSize) {
 		entries = new HashEntry[tableSize];
 		currentSize = 0;
 		probeSequence = 1;
 	}
 
+	/**
+	 * Inserts key and the offset from the database file into table.
+	 * 
+	 * @param key
+	 *            key to insert into table
+	 * @param filePointerRef
+	 *            offset from database file
+	 */
 	public void insert(String key, long filePointerRef) {
 		int currentPos = findPos(key);
 		++currentSize;
@@ -29,6 +55,12 @@ public class HashTable {
 
 	}
 
+	/**
+	 * Resizes the array to the next form of 4k + 3.
+	 * 
+	 * @param curSize
+	 *            current size of array
+	 */
 	public void allocateSize(int curSize) {
 
 		for (int i = 0; i < sizeArrayCheat.length - 1; i++) {
@@ -52,6 +84,13 @@ public class HashTable {
 		}
 	}
 
+	/**
+	 * This was given to us. This is the hashing function of the keys.
+	 * 
+	 * @param toHash
+	 *            key to hash
+	 * @return hashed key
+	 */
 	public int elfHash(String toHash) {
 		long hashValue = 0;
 		for (int Pos = 0; Pos < toHash.length(); Pos++) { // use all elements
@@ -64,6 +103,13 @@ public class HashTable {
 		return (((int) hashValue) % entries.length);
 	}
 
+	/**
+	 * Gets all information with the specified key.
+	 * 
+	 * @param key
+	 *            key to search for
+	 * @return all values that correspond to given key
+	 */
 	public long get(String key) {
 		int position = findPos(key);
 		if (entries[position] == null) {
@@ -78,6 +124,11 @@ public class HashTable {
 
 	}
 
+	/**
+	 * Size of table.
+	 * 
+	 * @return size
+	 */
 	public int size() {
 		return entries.length;
 	}
@@ -110,6 +161,9 @@ public class HashTable {
 		return currentSize;
 	}
 
+	/**
+	 * Returns information about elements in the hash table.
+	 */
 	public String toString() {
 
 		String tableInfo = "";
@@ -122,19 +176,40 @@ public class HashTable {
 		return tableInfo;
 	}
 
+	/**
+	 * Represents the hash entry. Contains the key and offset.
+	 */
 	private class HashEntry {
 		private String key;
 		private long offset;
 
+		/**
+		 * Constructor for the hash entry.
+		 * 
+		 * @param key
+		 *            key for storage
+		 * @param offset
+		 *            offset for storage
+		 */
 		public HashEntry(String key, long offset) {
 			this.key = key;
 			this.offset = offset;
 		}
 
+		/**
+		 * Returns the key.
+		 * 
+		 * @return key
+		 */
 		public String getKey() {
 			return key;
 		}
 
+		/**
+		 * Returns the value.
+		 * 
+		 * @return value
+		 */
 		public long getValue() {
 			return offset;
 		}

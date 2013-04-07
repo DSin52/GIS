@@ -238,6 +238,13 @@ public class GISRecord {
 				+ dateEdited;
 	}
 
+	/**
+	 * Array to hold all the full information with regards to its positioning in
+	 * GIS specifications.
+	 * 
+	 * @return array with information and correct positioning of elements of
+	 *         GIS.
+	 */
 	public String[] gisFields() {
 		String[] fieldArray = { "Feature ID", "Feature Name:", "Feature Class",
 				"State	", "State Code", "County	", "County Code", "Lattitude",
@@ -246,6 +253,13 @@ public class GISRecord {
 		return fieldArray;
 	}
 
+	/**
+	 * Checks to see if two objects are equal
+	 * 
+	 * @param other
+	 *            object to compare to
+	 * @return true if equal, false otherwise
+	 */
 	public boolean equals(GISRecord other) {
 		if (fId.equals(other.fId) && fName.equals(other.fName)
 				&& stateAlphCode.equals(other.stateAlphCode)

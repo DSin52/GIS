@@ -1,5 +1,16 @@
+/**
+ * This class is created to check for error in script files.
+ */
 public class CommandChecker {
 
+	/**
+	 * Goes through all the possible commands and verifies if they are of the
+	 * correct form.
+	 * 
+	 * @param command
+	 *            Command to error check
+	 * @return command, if error free or null
+	 */
 	public Command checkCommandIntegrity(String[] command) {
 		if (command[0].equals("world") && integrityCheck(command)) {
 			if (command.length == 5) {
@@ -78,6 +89,13 @@ public class CommandChecker {
 
 	}
 
+	/**
+	 * Checks to see if the String passed in is in-fact a number.
+	 * 
+	 * @param s
+	 *            String that represents a number
+	 * @return true if number, false otherwise
+	 */
 	public boolean isNumber(String s) {
 		try {
 			Integer.parseInt(s);
@@ -87,6 +105,13 @@ public class CommandChecker {
 		return true;
 	}
 
+	/**
+	 * Checks if the command specified conforms to command line specifications.
+	 * 
+	 * @param command
+	 *            command to check all command arguments
+	 * @return
+	 */
 	public boolean integrityCheck(String[] command) {
 		try {
 			for (int i = 1; i < command.length; i++) {
@@ -98,6 +123,13 @@ public class CommandChecker {
 		return true;
 	}
 
+	/**
+	 * Returns if a certain string can be converted into longitude.
+	 * 
+	 * @param command
+	 *            string that represents longitude
+	 * @return true if number, false otherwise
+	 */
 	public boolean isLong(String command) {
 		try {
 			convertToLong(command);
@@ -107,6 +139,13 @@ public class CommandChecker {
 		return true;
 	}
 
+	/**
+	 * Returns if a certain string can be converted into lattitude.
+	 * 
+	 * @param command
+	 *            string that represents lattitude
+	 * @return true if number, false otherwise
+	 */
 	public boolean isLat(String command) {
 		try {
 			convertToLat(command);
@@ -116,6 +155,13 @@ public class CommandChecker {
 		return true;
 	}
 
+	/**
+	 * Returns a latitude parsed value of a string.
+	 * 
+	 * @param lat
+	 *            String to convert to latitude
+	 * @return latitude integer
+	 */
 	public Long convertToLat(String lat) {
 		long conversion = Long.parseLong(lat.substring(0, lat.length() - 1));
 		if (lat.substring(lat.length() - 1, lat.length()).equals("S")) {
@@ -124,6 +170,13 @@ public class CommandChecker {
 		return (conversion);
 	}
 
+	/**
+	 * Returns a longitude parsed value of a string.
+	 * 
+	 * @param lon
+	 *            String to convert to longitude
+	 * @return longitude integer
+	 */
 	public Long convertToLong(String lon) {
 		long conversion = Long.parseLong(lon.substring(0, lon.length() - 1));
 		if (lon.substring(lon.length() - 1, lon.length()).equals("W")) {
@@ -132,6 +185,13 @@ public class CommandChecker {
 		return (conversion);
 	}
 
+	/**
+	 * Converts string value into Seconds
+	 * 
+	 * @param value
+	 *            string to convert into longitude seconds
+	 * @return amount of seconds corresponding to value
+	 */
 	public long convertToSecondsLong(String value) {
 		String days = value.substring(0, 3);
 		String minutes = value.substring(3, 5);
@@ -145,6 +205,13 @@ public class CommandChecker {
 		return dayToSeconds + minutesToSeconds + seconds;
 	}
 
+	/**
+	 * Converts string value into Seconds
+	 * 
+	 * @param value
+	 *            string to convert into latitude seconds
+	 * @return amount of seconds corresponding to value
+	 */
 	public long convertToSecondsLat(String value) {
 		String days = value.substring(0, 2);
 		String minutes = value.substring(2, 4);

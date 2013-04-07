@@ -4,6 +4,13 @@ import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Class that goes through entire command script to execute the commands
+ * properly.
+ * 
+ * @author Divit Singh divit52
+ * 
+ */
 public class CommandScriptProcessor {
 	String dataBaseFile;
 	String cmdScriptFile;
@@ -15,6 +22,21 @@ public class CommandScriptProcessor {
 	String seperator = "---------------------------"
 			+ "---------------------------------" + "--------------------";
 
+	/**
+	 * Initializes object with all necessary components to run through command
+	 * script and execute the commands.
+	 * 
+	 * @param dataBaseFile
+	 *            name of database file to insert into
+	 * @param cmdScriptFile
+	 *            name of cmd file to read from
+	 * @param log
+	 *            name of log to write to
+	 * @param cmdScript
+	 *            File name of script that is being read in
+	 * @param logWriter
+	 *            FileWriter object that writes to the log
+	 */
 	public CommandScriptProcessor(String dataBaseFile, String cmdScriptFile,
 			String log, RandomAccessFile cmdScript, FileWriter logWriter) {
 		this.dataBaseFile = dataBaseFile;
@@ -25,6 +47,10 @@ public class CommandScriptProcessor {
 		checker = new CommandChecker();
 	}
 
+	/**
+	 * Goes through all possible commands that can be in the command file and
+	 * executes them accordingly. All output goes to the log.
+	 */
 	public void execCommands() {
 		int cmdCounter = 1;
 		try {
@@ -112,7 +138,7 @@ public class CommandScriptProcessor {
 						logWriter.write(seperator + "\r\n");
 						break;
 					case WHAT_IS_IN:
-						logWriter.write("Command " + cmdCounter++ + "\t"
+						logWriter.write("Command " + cmdCounter++ + ":\t"
 								+ command[0] + "\t" + command[1] + "\t"
 								+ command[2] + "\t" + command[3] + "\t"
 								+ command[4] + "\r\n\r\n");
@@ -121,7 +147,7 @@ public class CommandScriptProcessor {
 						logWriter.write(seperator + "\r\n");
 						break;
 					case WHAT_IS_IN_L:
-						logWriter.write("Command " + cmdCounter++ + "\t"
+						logWriter.write("Command " + cmdCounter++ + ":\t"
 								+ command[0] + "\t" + command[1] + "\t"
 								+ command[2] + "\t" + command[3] + "\t"
 								+ command[4] + "\t" + command[5] + "\r\n\r\n");
@@ -130,7 +156,7 @@ public class CommandScriptProcessor {
 						logWriter.write(seperator + "\r\n");
 						break;
 					case WHAT_IS_IN_C:
-						logWriter.write("Command " + cmdCounter++ + "\t"
+						logWriter.write("Command " + cmdCounter++ + ":\t"
 								+ command[0] + "\t" + command[1] + "\t"
 								+ command[2] + "\t" + command[3] + "\t"
 								+ command[4] + "\t" + command[5] + "\r\n\r\n");
@@ -140,7 +166,7 @@ public class CommandScriptProcessor {
 						logWriter.write(seperator + "\r\n");
 						break;
 					case WHAT_IS:
-						logWriter.write("Command " + cmdCounter++ + "\t"
+						logWriter.write("Command " + cmdCounter++ + ":\t"
 								+ command[0] + "\t" + command[1] + "\t"
 								+ command[2] + "\r\n\r\n");
 
@@ -148,7 +174,7 @@ public class CommandScriptProcessor {
 						logWriter.write(seperator + "\r\n");
 						break;
 					case WHAT_IS_L:
-						logWriter.write("Command " + cmdCounter++ + "\t"
+						logWriter.write("Command " + cmdCounter++ + ":\t"
 								+ command[0] + "\t" + command[1] + "\t"
 								+ command[2] + "\t" + command[3] + "\r\n\r\n");
 						scriptProc.whatIsLFinder(command[2], command[3]);

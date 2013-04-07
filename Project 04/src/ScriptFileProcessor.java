@@ -5,6 +5,13 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Vector;
 
+/**
+ * This class goes through and contains all methods that actually execute the
+ * commands accordingly.
+ * 
+ * @author Divit Singh divit52
+ * 
+ */
 public class ScriptFileProcessor {
 	String dataBaseFile;
 	File dataFile;
@@ -34,6 +41,13 @@ public class ScriptFileProcessor {
 		tree = new prQuadtree<Coordinates>(longMin, longMax, latMin, latMax);
 	}
 
+	/**
+	 * Writes information to database that is read from record file into the
+	 * database if it lies between the bounds of the region being searched for.
+	 * 
+	 * @param recordFile
+	 *            file to read from
+	 */
 	public void writeToDB(String recordFile) {
 		try {
 			RandomAccessFile record = new RandomAccessFile(recordFile, "r");
@@ -80,10 +94,19 @@ public class ScriptFileProcessor {
 
 	}
 
+	/**
+	 * Returns number of imported files.
+	 * 
+	 * @return number of imported files
+	 */
 	public int getImportedFilesNum() {
 		return importedFiles;
 	}
 
+	/**
+	 * Adds all the coordinates that are in database into the quad tree as well
+	 * as the hashtable.
+	 */
 	public void addCoordinates() {
 		try {
 			RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
@@ -127,6 +150,15 @@ public class ScriptFileProcessor {
 		}
 	}
 
+	/**
+	 * Returns all values that are at specified coordinates. Puts results into
+	 * log.
+	 * 
+	 * @param lon
+	 *            longitude
+	 * @param lat
+	 *            latitude
+	 */
 	public void whatIsAt(String lon, String lat) {
 		try {
 			RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
@@ -166,6 +198,15 @@ public class ScriptFileProcessor {
 
 	}
 
+	/**
+	 * Returns all nonempty values at specified location in a uniform manner.
+	 * Puts results into log.
+	 * 
+	 * @param lon
+	 *            longitude
+	 * @param lat
+	 *            latitude
+	 */
 	public void whatIsAtL(String lon, String lat) {
 		try {
 			RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
@@ -209,6 +250,14 @@ public class ScriptFileProcessor {
 
 	}
 
+	/**
+	 * Returns number of values that are at specified coordinates.
+	 * 
+	 * @param lon
+	 *            longitude
+	 * @param lat
+	 *            latitude
+	 */
 	public void whatIsAtC(String lon, String lat) {
 		try {
 			long longitude = convertToSecondsLong(lon);
@@ -232,22 +281,51 @@ public class ScriptFileProcessor {
 
 	}
 
+	/**
+	 * Returns the minimum longitude value in the world.
+	 * 
+	 * @return minimum longitude
+	 */
 	public long getLongMin() {
 		return longMin;
 	}
 
+	/**
+	 * Returns the max longitude value in the world.
+	 * 
+	 * @return max longitude
+	 */
 	public long getLongMax() {
 		return longMax;
 	}
 
+	/**
+	 * Returns the minimum latitude value in the world.
+	 * 
+	 * @return minimum latitude
+	 */
 	public long getLatMin() {
 		return latMin;
 	}
 
+	/**
+	 * Returns the max latitude value in the world.
+	 * 
+	 * @return max latitude
+	 */
 	public long getLatMax() {
 		return latMax;
 	}
 
+	/**
+	 * Converts strings into seconds and sees if they lie within the bounds.
+	 * 
+	 * @param lon
+	 *            longitude
+	 * @param lat
+	 *            latitude
+	 * @return true if within boundaries, false otherwise
+	 */
 	private boolean checkBounds(String lon, String lat) {
 		long lonNum = convertToSecondsLong(lon);
 		long latNum = convertToSecondsLat(lat);
@@ -258,6 +336,13 @@ public class ScriptFileProcessor {
 		return false;
 	}
 
+	/**
+	 * Converts specified string into numerical form.
+	 * 
+	 * @param lat
+	 *            latitude
+	 * @return number corresponding to string
+	 */
 	public Long convertToLat(String lat) {
 		long conversion = Long.parseLong(lat.substring(0, lat.length() - 1));
 		if (lat.substring(lat.length() - 1, lat.length()).equals("S")) {
@@ -266,6 +351,13 @@ public class ScriptFileProcessor {
 		return (conversion);
 	}
 
+	/**
+	 * Converts specified string into numerical form.
+	 * 
+	 * @param lon
+	 *            longitude
+	 * @return number corresponding to string
+	 */
 	public Long convertToLong(String lon) {
 		long conversion = Long.parseLong(lon.substring(0, lon.length() - 1));
 		if (lon.substring(lon.length() - 1, lon.length()).equals("W")) {
@@ -320,6 +412,18 @@ public class ScriptFileProcessor {
 		return lineInfo;
 	}
 
+	/**
+	 * Returns all values that match the specified bounds.
+	 * 
+	 * @param latString
+	 *            latitude being searched for
+	 * @param longString
+	 *            longitude being searched for
+	 * @param latDifS
+	 *            leniency in latitude bounds searching
+	 * @param longDifS
+	 *            leniency in longitude bounds searching
+	 */
 	public void whatIsInFinder(String latString, String longString,
 			String latDifS, String longDifS) {
 		long lattitude = convertToSecondsLat(latString);
@@ -345,8 +449,8 @@ public class ScriptFileProcessor {
 					numCoords += coords.offsets.size();
 				}
 				logWriter.write("\tThe following " + numCoords
-						+ " features were found in (" + latString + " +/- "
-						+ latDif + ", " + longString + " +/- " + longDif
+						+ " features were found in (" + longString + " +/- "
+						+ longDif + ", " + latString + " +/- " + latDif
 						+ ")\r\n");
 				for (int i = 0; i < coordVec.size(); i++) {
 					coordRef = coordVec.get(i);
@@ -372,6 +476,19 @@ public class ScriptFileProcessor {
 		}
 	}
 
+	/**
+	 * Returns all non-empty values of coordinates that are within the specified
+	 * bounds.
+	 * 
+	 * @param latString
+	 *            latitude string being searched
+	 * @param longString
+	 *            longitude string being searched
+	 * @param latDifS
+	 *            latitude difference to account for
+	 * @param longDifS
+	 *            longitude difference to account for
+	 */
 	public void whatIsInLFinder(String latString, String longString,
 			String latDifS, String longDifS) {
 		long lattitude = convertToSecondsLat(latString);
@@ -393,8 +510,8 @@ public class ScriptFileProcessor {
 					numCoords += coords.offsets.size();
 				}
 				logWriter.write("\tThe following " + numCoords
-						+ " features were found in (" + latString + " +/- "
-						+ latDif + ", " + longString + " +/- " + longDif
+						+ " features were found in (" + longString + " +/- "
+						+ longDif + ", " + latString + " +/- " + latDif
 						+ ")\r\n");
 				RandomAccessFile dataAccess = new RandomAccessFile(dataFile,
 						"r");
@@ -430,6 +547,18 @@ public class ScriptFileProcessor {
 		}
 	}
 
+	/**
+	 * Returns number of values within the specified boundaries
+	 * 
+	 * @param latString
+	 *            latitude being searched
+	 * @param longString
+	 *            longitude being searched
+	 * @param latDifS
+	 *            latitude leniency being searched
+	 * @param longDifS
+	 *            longitude leniency being searched
+	 */
 	public void whatIsInCFinder(String latString, String longString,
 			String latDifS, String longDifS) {
 		long lattitude = convertToSecondsLat(latString);
@@ -446,8 +575,8 @@ public class ScriptFileProcessor {
 			}
 
 			logWriter.write("\t" + totalOffsets + " features were found in ("
-					+ latString + " +/- " + latDif + ", " + longString
-					+ " +/- " + longDif + ")\r\n");
+					+ longString + " +/- " + longDif + ", " + latString
+					+ " +/- " + latDif + ")\r\n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -481,10 +610,23 @@ public class ScriptFileProcessor {
 		return dayToSeconds + minutesToSeconds + seconds;
 	}
 
+	/**
+	 * Returns size of hash table.
+	 * 
+	 * @return size of hashtable
+	 */
 	public int hashTableSize() {
 		return hashTable.size();
 	}
 
+	/**
+	 * Gives all values that have the same feature and state name.
+	 * 
+	 * @param feature
+	 *            feature being searched
+	 * @param state
+	 *            state being searched
+	 */
 	public void whatIsFinder(String feature, String state) {
 		long offset = hashTable.get(feature + ":" + state);
 
@@ -512,6 +654,15 @@ public class ScriptFileProcessor {
 
 	}
 
+	/**
+	 * Returns all nonempty values corresponding to the coordinate in hash
+	 * table.
+	 * 
+	 * @param feature
+	 *            feature being searched
+	 * @param state
+	 *            state being searched
+	 */
 	public void whatIsLFinder(String feature, String state) {
 
 		long offset = hashTable.get(feature + ":" + state);
@@ -523,6 +674,8 @@ public class ScriptFileProcessor {
 			String[] gArray = poolRef.split("[|]");
 			pool.insertAtHead(offset + ":\t" + poolRef);
 			GISRecord gRec = createGIS(poolRef);
+			logWriter.write("Found matching record at offset " + offset
+					+ ":\r\n\r\n");
 			for (int j = 0; j < 19; j++) {
 				if (gArray[j].length() > 0 && gRec.gisFields()[j].length() > 0) {
 					logWriter.write(gRec.gisFields()[j] + "\t:\t" + gArray[j]
@@ -541,10 +694,16 @@ public class ScriptFileProcessor {
 
 	}
 
+	/**
+	 * Returns tree representaiton of values in a uniform matter.
+	 */
 	public void debugQuad() {
 		tree.printTreeHelper(tree.root, " ", logWriter);
 	}
 
+	/**
+	 * Returns all values in hashtable in uniform manner.
+	 */
 	public void debugHash() {
 		try {
 			logWriter.write(hashTable.toString());
@@ -555,6 +714,9 @@ public class ScriptFileProcessor {
 
 	}
 
+	/**
+	 * Returns all contents in the pool in a uniform matter MRU --> LRU.
+	 */
 	public void debugPool() {
 		try {
 			logWriter.write(pool.toString());
