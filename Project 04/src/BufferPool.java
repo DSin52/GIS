@@ -25,7 +25,6 @@ public class BufferPool {
 	 */
 	public void insertAtHead(String data) {
 		removeDuplicate(data);
-		System.out.println(data);
 		poolCount++;
 		headRef = new BufferNode(data, headRef);
 
@@ -50,7 +49,6 @@ public class BufferPool {
 			return;
 		}
 		while (temp != null && temp.next != null) {
-			System.out.println("FSLDJF");
 			if (temp.next.data.equals(data)) {
 				temp.next = temp.next.next;
 				poolCount--;

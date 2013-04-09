@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -50,6 +51,8 @@ public class ScriptFileProcessor {
 	 */
 	public void writeToDB(String recordFile) {
 		try {
+			importedFiles = 0;
+			// hashTable.currentSize = 0;
 			RandomAccessFile record = new RandomAccessFile(recordFile, "r");
 			dataWriter = new FileWriter(dataFile, true);
 			if (dataFile.length() == 0) {
@@ -72,6 +75,7 @@ public class ScriptFileProcessor {
 			dataWriter.close();
 			record.close();
 			addCoordinates();
+			System.out.println(tree.prQuadTreeSize);
 		} catch (FileNotFoundException e) {
 			try {
 				logWriter.write("File not found.");
@@ -616,7 +620,7 @@ public class ScriptFileProcessor {
 	 * @return size of hashtable
 	 */
 	public int hashTableSize() {
-		return hashTable.size();
+		return hashTable.getFilled();
 	}
 
 	/**
@@ -628,25 +632,48 @@ public class ScriptFileProcessor {
 	 *            state being searched
 	 */
 	public void whatIsFinder(String feature, String state) {
-		long offset = hashTable.get(feature + ":" + state);
-
+		// long offset = hashTable.get(feature + ":" + state);
+		//
+		// try {
+		// if (offset == -1) {
+		// logWriter.write("No records match " + feature + " and " + state
+		// + "\r\n");
+		// return;
+		// }
+		// RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
+		// dataAccess.seek(offset);
+		// String poolRef = dataAccess.readLine();
+		// pool.insertAtHead(offset + ":\t" + poolRef);
+		// GISRecord gRec = createGIS(poolRef);
+		// logWriter.write(offset + ":\t" + gRec.countyName + "\t"
+		// + gRec.primLongDMS + "\t" + gRec.primLatDMS + "\r\n");
+		// dataAccess.close();
+		// } catch (FileNotFoundException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		ArrayList<Long> offsets = hashTable.getList(feature + ":" + state);
 		try {
-			if (offset == -1) {
+			if (offsets.size() == 0) {
+
 				logWriter.write("No records match " + feature + " and " + state
 						+ "\r\n");
 				return;
+
 			}
 			RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
-			dataAccess.seek(offset);
-			String poolRef = dataAccess.readLine();
-			pool.insertAtHead(offset + ":\t" + poolRef);
-			GISRecord gRec = createGIS(poolRef);
-			logWriter.write(offset + ":\t" + gRec.countyName + "\t"
-					+ gRec.primLongDMS + "\t" + gRec.primLatDMS + "\r\n");
-			dataAccess.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			for (int i = 0; i < offsets.size(); i++) {
+				dataAccess.seek(offsets.get(i));
+				String poolRef = dataAccess.readLine();
+				pool.insertAtHead(offsets.get(i) + ":\t" + poolRef);
+				GISRecord gRec = createGIS(poolRef);
+				logWriter.write(offsets.get(i) + ":\t" + gRec.countyName + "\t"
+						+ gRec.primLongDMS + "\t" + gRec.primLatDMS + "\r\n");
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -665,28 +692,62 @@ public class ScriptFileProcessor {
 	 */
 	public void whatIsLFinder(String feature, String state) {
 
-		long offset = hashTable.get(feature + ":" + state);
-		RandomAccessFile dataAccess;
+		// long offset = hashTable.get(feature + ":" + state);
+		// RandomAccessFile dataAccess;
+		// try {
+		// dataAccess = new RandomAccessFile(dataFile, "r");
+		// dataAccess.seek(offset);
+		// String poolRef = dataAccess.readLine();
+		// String[] gArray = poolRef.split("[|]");
+		// pool.insertAtHead(offset + ":\t" + poolRef);
+		// GISRecord gRec = createGIS(poolRef);
+		// logWriter.write("Found matching record at offset " + offset
+		// + ":\r\n\r\n");
+		// for (int j = 0; j < 19; j++) {
+		// if (gArray[j].length() > 0 && gRec.gisFields()[j].length() > 0) {
+		// logWriter.write(gRec.gisFields()[j] + "\t:\t" + gArray[j]
+		// + "\r\n");
+		// }
+		//
+		// }
+		// dataAccess.close();
+		// } catch (FileNotFoundException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		ArrayList<Long> offsets = hashTable.getList(feature + ":" + state);
 		try {
-			dataAccess = new RandomAccessFile(dataFile, "r");
-			dataAccess.seek(offset);
-			String poolRef = dataAccess.readLine();
-			String[] gArray = poolRef.split("[|]");
-			pool.insertAtHead(offset + ":\t" + poolRef);
-			GISRecord gRec = createGIS(poolRef);
-			logWriter.write("Found matching record at offset " + offset
-					+ ":\r\n\r\n");
-			for (int j = 0; j < 19; j++) {
-				if (gArray[j].length() > 0 && gRec.gisFields()[j].length() > 0) {
-					logWriter.write(gRec.gisFields()[j] + "\t:\t" + gArray[j]
-							+ "\r\n");
-				}
+			if (offsets.size() == 0) {
+
+				logWriter.write("No records match " + feature + " and " + state
+						+ "\r\n");
+				return;
 
 			}
-			dataAccess.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			RandomAccessFile dataAccess = new RandomAccessFile(dataFile, "r");
+			for (int i = 0; i < offsets.size(); i++) {
+				dataAccess.seek(offsets.get(i));
+				String poolRef = dataAccess.readLine();
+				pool.insertAtHead(offsets.get(i) + ":\t" + poolRef);
+				String[] gArray = poolRef.split("[|]");
+				GISRecord gRec = createGIS(poolRef);
+				logWriter.write(offsets.get(i) + ":\t" + gRec.countyName + "\t"
+						+ gRec.primLongDMS + "\t" + gRec.primLatDMS + "\r\n");
+				logWriter.write("Found matching record at offset "
+						+ offsets.get(i) + ":\r\n\r\n");
+				for (int j = 0; j < 19; j++) {
+					if (gArray[j].length() > 0
+							&& gRec.gisFields()[j].length() > 0) {
+						logWriter.write(gRec.gisFields()[j] + "\t:\t"
+								+ gArray[j] + "\r\n");
+					}
+
+				}
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,15 +1,17 @@
+import java.util.ArrayList;
+
 /**
  * This class represents the hash table functionality. It uses an array for its
  * data. Its probe sequence is quadratic of the form: (n^2 + n) / 2. The
- * resizing of the table is of the prime for 4k + 3 to ensure that no collisions
- * are unaccounted for.
+ * resizing of the table is of the prime for 4step+ 3 to ensure that no
+ * collisions are unaccounted for.
  * 
  * @author Divit Singh divit52
  * 
  */
 public class HashTable {
 	private HashEntry[] entries;
-	private int currentSize;
+	int currentSize;
 	private int[] sizeArrayCheat = new int[] { 1019, 2027, 4079, 8123, 16267,
 			32503, 65011, 130027, 260111, 520279, 1040387, 2080763, 4161539,
 			8323151, 16646323 };
@@ -31,7 +33,7 @@ public class HashTable {
 	public HashTable(int tableSize) {
 		entries = new HashEntry[tableSize];
 		currentSize = 0;
-		probeSequence = 1;
+		probeSequence = 0;
 	}
 
 	/**
@@ -43,20 +45,35 @@ public class HashTable {
 	 *            offset from database file
 	 */
 	public void insert(String key, long filePointerRef) {
-		int currentPos = findPos(key);
-		++currentSize;
-		if (currentSize >= (.7 * entries.length)) {
+		// probeSequence = 0;
+		if (currentSize > .7 * entries.length) {
 			rehash();
 		}
-		entries[currentPos] = new HashEntry(key, filePointerRef);
+		int i;
+		for (i = 0; i < entries.length; ++i) {
+			int currentPos = quadProbe(key, i);
 
-		System.out.println("Current Size: " + currentSize + ": "
-				+ entries.length);
+			if (entries[currentPos] == null) {
+				entries[currentPos] = new HashEntry(key, filePointerRef);
+				++currentSize;
+				break;
+				// return;
+			} else if (entries[currentPos].key.equals(key)) {
+				entries[currentPos].offsets.add(filePointerRef);
+				++currentSize;
+				break;
+			}
+		}
+		probeSequence = Math.max(probeSequence, i);
 
 	}
 
+	private int quadProbe(String key, int i) {
+		return (elfHash(key) + (i * i + i) / 2) % entries.length;
+	}
+
 	/**
-	 * Resizes the array to the next form of 4k + 3.
+	 * Resizes the array to the next form of 4step+ 3.
 	 * 
 	 * @param curSize
 	 *            current size of array
@@ -79,7 +96,9 @@ public class HashTable {
 		currentSize = 0;
 		for (int i = 0; i < oldRef.length; i++) {
 			if (oldRef[i] != null) {
-				insert(oldRef[i].getKey(), oldRef[i].getValue());
+				for (long offset : oldRef[i].offsets) {
+					insert(oldRef[i].key, offset);
+				}
 			}
 		}
 	}
@@ -103,25 +122,18 @@ public class HashTable {
 		return (((int) hashValue) % entries.length);
 	}
 
-	/**
-	 * Gets all information with the specified key.
-	 * 
-	 * @param key
-	 *            key to search for
-	 * @return all values that correspond to given key
-	 */
-	public long get(String key) {
-		int position = findPos(key);
-		if (entries[position] == null) {
-			System.out.println("NULL");
+	public ArrayList<Long> getList(String key) {
+		ArrayList<Long> list = new ArrayList<Long>();
+		int index = elfHash(key) % entries.length;
+		int step = 1;
+		while (entries[index] != null) {
+			if (entries[index].key.equals(key)) {
+				return entries[index].offsets;
+			}
+			index = index + (((step * step) + step) / 2) % entries.length;
+			step++;
 		}
-		System.out.println("POSITION: " + position);
-		try {
-			return entries[position].getValue();
-		} catch (NullPointerException e) {
-			return -1;
-		}
-
+		return list;
 	}
 
 	/**
@@ -131,26 +143,6 @@ public class HashTable {
 	 */
 	public int size() {
 		return entries.length;
-	}
-
-	private int findPos(String key) {
-		System.out.println("KEY: " + key);
-		int offset = 0;
-		int hashedKey = elfHash(key);
-		int incHash = (hashedKey % entries.length);
-		for (int i = 0; i < entries.length && entries[incHash] != null
-				&& !entries[incHash].getKey().equals(key); i++) {
-			offset = (int) ((Math.pow(i, 2) + i) / 2) % entries.length;
-			incHash = (hashedKey + offset);
-			if (incHash >= entries.length) {
-				incHash = incHash - entries.length;
-			}
-
-			probeSequence = Math.max(probeSequence, i);
-		}
-
-		return incHash;
-
 	}
 
 	public int getProbeSequence() {
@@ -181,7 +173,7 @@ public class HashTable {
 	 */
 	private class HashEntry {
 		private String key;
-		private long offset;
+		private ArrayList<Long> offsets = new ArrayList<Long>();
 
 		/**
 		 * Constructor for the hash entry.
@@ -193,7 +185,7 @@ public class HashTable {
 		 */
 		public HashEntry(String key, long offset) {
 			this.key = key;
-			this.offset = offset;
+			offsets.add(offset);
 		}
 
 		/**
@@ -210,8 +202,8 @@ public class HashTable {
 		 * 
 		 * @return value
 		 */
-		public long getValue() {
-			return offset;
+		public ArrayList<Long> getValue() {
+			return offsets;
 		}
 
 	}

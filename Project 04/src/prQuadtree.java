@@ -209,7 +209,7 @@ public class prQuadtree<T extends Compare2D<? super T>> {
 		// If root is null, just create a new leaf node with element in it.
 		if (root == null) {
 			root = new prQuadLeaf(elem, 4);
-			prQuadTreeSize++;
+			// prQuadTreeSize++;
 			return root;
 		} else if (isLeaf(root)) {
 
@@ -224,6 +224,7 @@ public class prQuadtree<T extends Compare2D<? super T>> {
 			if (rootRef.quadSize() < rootRef.getBucketSize()) {
 
 				rootRef.Elements.add(elem);
+				prQuadTreeSize++;
 				return rootRef;
 
 			} else {
@@ -364,6 +365,7 @@ public class prQuadtree<T extends Compare2D<? super T>> {
 				for (int i = 0; i < rootRef.quadSize(); i++) {
 					if (rootRef.getElement(i).equals(Elem)) {
 						rootRef.Elements.remove(i);
+						prQuadTreeSize--;
 						return root;
 					}
 				}
