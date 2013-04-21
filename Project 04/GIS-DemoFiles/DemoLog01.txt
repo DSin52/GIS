@@ -1,0 +1,231 @@
+; Demo Script 1
+;
+; Specify boundaries of coordinate space:
+world	0802600W	0802100W	370900N	371400N
+
+GIS Program
+
+dbFile:     demoDB01.txt
+script:     DemoScript01.txt
+log:        DemoLog01.txt
+Start time: Thu Apr 18 16:08:39 EDT 2013
+Quadtree children are printed in the order SW  SE  NE  NW
+--------------------------------------------------------------------------------
+
+Latitude/longitude values in index entries are shown as signed integers, in total seconds.
+
+World boundaries are set to:
+              134040
+   -289560                -289260
+              133740
+--------------------------------------------------------------------------------
+;
+; Import some data:
+Command 1:  import	VA_VTCampus.txt
+
+Imported Features by name: 97
+Longest probe sequence:    1
+Imported Locations:        97
+--------------------------------------------------------------------------------
+;
+; Check the location indices:
+Command 2:  debug	quad
+
+   [(-289505, 133798), 605] 
+   *
+@
+   *
+      *
+      [(-289468, 133942), 439] 
+   @
+      [(-289438, 133997), 12742] 
+            *
+            *
+         @
+            [(-289526, 133985), 9469] [(-289532, 133991), 9604] [(-289527, 133997), 10174] [(-289528, 134002), 12358] 
+            [(-289556, 133984), 4289] [(-289543, 133984), 6672] 
+            [(-289509, 133973), 3521] [(-289518, 133983), 13015] 
+            *
+         @
+            [(-289498, 134002), 9037] 
+               [(-289519, 133992), 2879] [(-289519, 133988), 3388, 5847] [(-289522, 133992), 12491] 
+               [(-289505, 133992), 796] 
+            @
+               [(-289507, 133998), 2229] [(-289509, 134001), 8364] 
+               [(-289520, 134002), 1184] 
+      @
+                  [(-289521, 134006), 1056] 
+                  [(-289516, 134003), 10716] [(-289517, 134007), 11799] 
+               @
+                  *
+                  [(-289518, 134011), 4162] [(-289520, 134010), 8633] 
+               [(-289513, 134010), 5585] [(-289507, 134008), 8774] [(-289507, 134011), 12077] 
+            @
+                  [(-289513, 134013), 7535] [(-289509, 134012), 13160] 
+                  [(-289504, 134012), 2368] [(-289505, 134014), 3011] [(-289508, 134015), 10983] 
+               @
+                  [(-289504, 134017), 8492] [(-289504, 134021), 9181] 
+                  [(-289513, 134018), 1440] 
+               [(-289515, 134014), 2622] [(-289521, 134020), 6281] [(-289519, 134014), 6408] 
+            [(-289502, 134011), 2754] [(-289502, 134014), 5319] 
+         @
+            [(-289501, 134029), 1944] [(-289499, 134023), 7803] [(-289498, 134023), 12613] 
+                  [(-289521, 134025), 7277] 
+                  [(-289515, 134023), 6852] 
+               @
+                  [(-289514, 134027), 6543] 
+                  [(-289519, 134029), 2495] [(-289521, 134028), 3262] 
+                  [(-289510, 134024), 3134] 
+                  [(-289505, 134022), 7663] 
+               @
+                  [(-289506, 134026), 4548, 11515] 
+                  [(-289512, 134028), 930] [(-289509, 134030), 7133] 
+            @
+                  [(-289512, 134034), 4036] [(-289513, 134032), 8081] [(-289512, 134031), 11246] [(-289511, 134034), 11373] 
+                  [(-289507, 134034), 10853] 
+               @
+                  *
+                  [(-289513, 134036), 10455] 
+                  [(-289521, 134032), 5724] [(-289518, 134034), 12883] [(-289518, 134033), 13300] 
+                  [(-289515, 134034), 4799, 7936] [(-289517, 134032), 5980] [(-289516, 134032), 12216] 
+               @
+                  *
+                  *
+            *
+               [(-289539, 134007), 4675] 
+                  [(-289530, 134006), 10591] 
+                  [(-289525, 134005), 1568] [(-289526, 134006), 9755] 
+               @
+                  [(-289525, 134008), 3911] [(-289523, 134010), 4423] 
+                  [(-289529, 134009), 6984] [(-289528, 134009), 9339] 
+            @
+                  *
+                  [(-289523, 134012), 2100] [(-289525, 134012), 3786] [(-289527, 134013), 10323] 
+               @
+                  *
+                  [(-289531, 134017), 1312] [(-289531, 134020), 1693] [(-289530, 134021), 3659] [(-289528, 134020), 5191] 
+               [(-289535, 134016), 7408] 
+         @
+               [(-289533, 134024), 5453] 
+                  [(-289529, 134023), 6114] [(-289529, 134024), 10028] 
+                  [(-289526, 134025), 265] [(-289526, 134024), 11665] 
+               @
+                  [(-289526, 134029), 1817] [(-289524, 134030), 11942] 
+                  [(-289529, 134026), 8236] [(-289530, 134027), 8906] 
+            @
+               [(-289527, 134031), 5062] [(-289526, 134033), 9897] [(-289529, 134031), 11112] 
+               *
+            [(-289554, 134024), 4924] 
+--------------------------------------------------------------------------------
+Command 3:  debug	hash
+
+Format of display is
+Slot number: data record
+Current table size is 1019
+Number of elements in table is 97
+
+5:  [William Patton Hall:VA, [7277]]
+6:  [Military Building:VA, [12883]]
+11:  [Miller-Johnson Track/Soccer Complex:VA, [13015]]
+16:  [Burchard Hall:VA, [8236]]
+23:  [Whittemore Hall:VA, [5062]]
+46:  [Jimmie Monteith Junior Hall:VA, [11373]]
+62:  [Williams Hall:VA, [5191]]
+65:  [Robert Femoyer Hall:VA, [5980]]
+67:  [Cochrane Hall:VA, [1184]]
+83:  [Engel Hall:VA, [1568]]
+106:  [McBryde Hall:VA, [2495]]
+120:  [Robeson Hall:VA, [3659]]
+121:  [Wright House:VA, [7408]]
+123:  [Virginia Polytechnic Institute and State University Horticultural Research Area:VA, [605]]
+131:  [John Houston Squires Student Center:VA, [11515]]
+155:  [Newman Hall:VA, [3011]]
+193:  [War Memorial Chapel:VA, [6852]]
+203:  [Norris Hall:VA, [3262]]
+204:  [Arts and Science Administration Building:VA, [8081]]
+220:  [Smithfield Plantation:VA, [4289]]
+257:  [J W Whittemore Hall:VA, [11112]]
+259:  [Ella Agnew Hall:VA, [9339]]
+264:  [Alumni Hall-Virginia Tech:VA, [7663]]
+286:  [Peddrew-Yates Residence Hall:VA, [5585]]
+287:  [Sandy Hall:VA, [3786]]
+295:  [New Residence Hall - East:VA, [13160]]
+319:  [Rector Tennis Pavillion:VA, [3521]]
+341:  [Squires Hall:VA, [4548]]
+350:  [Memorial Gymnasium:VA, [2622]]
+352:  [James H Lane Hall:VA, [11246]]
+364:  [Rechor Field House:VA, [5847]]
+369:  [Leander Dietrick Dining Hall:VA, [11799]]
+383:  [McComas Hall:VA, [12491]]
+389:  [Price House:VA, [5724]]
+396:  [Newman Library:VA, [3134]]
+422:  [Architecture Annex:VA, [7803]]
+432:  [Merryman Athletic Facility:VA, [12742]]
+436:  [Hutcheson Hall:VA, [2100]]
+459:  [Major Lloyd W Williams Hall:VA, [12216]]
+468:  [Brodie Hall:VA, [930]]
+473:  [Old Security Building:VA, [13300]]
+501:  [Donaldson Brown Hotel and Conference Center:VA, [9181]]
+505:  [Slusher Hall:VA, [4162]]
+517:  [Paul Barringer Hall:VA, [5319]]
+546:  [Julian Burruss Hall:VA, [11665]]
+550:  [The Grove:VA, [4675]]
+590:  [Fred Durham Hall:VA, [9897]]
+600:  [Eggleston Hall:VA, [1440]]
+616:  [J J Owens Hall:VA, [10983]]
+617:  [Virginia Tech Golf Course:VA, [4924]]
+622:  [William H "Bosco" Rasche Hall:VA, [7133]]
+623:  [George Litton and Paul Reaves Hall:VA, [10174]]
+628:  [Hancock Hall:VA, [1817]]
+631:  [William "Buttermilk" Saunders Hall:VA, [6984]]
+633:  [Virginia Tech/Montgomery Executive Airport:VA, [439]]
+642:  [Paul Derring Hall:VA, [5453]]
+645:  [Rector Field House:VA, [3388]]
+647:  [Fralin Biotechnology Center:VA, [9755]]
+671:  [Roy Holden Hall:VA, [6281]]
+679:  [Art and Design Learning Center:VA, [7936]]
+689:  [Seitz Hall:VA, [3911]]
+701:  [Maude Wallace Hall:VA, [12358]]
+706:  [Claudius Lee Hall:VA, [8774]]
+739:  [Shanks Hall:VA, [4036]]
+740:  [Thomas Hall:VA, [4799]]
+744:  [Hahn Hall:VA, [1693]]
+747:  [Charles Vawter Senior Hall:VA, [8492]]
+772:  [Henderson Student Health Service Building:VA, [1944]]
+775:  [Thomas Campbell Hall:VA, [6408]]
+786:  [Virginia Maryland Regional College of Veterinary Medicine:VA, [6672]]
+793:  [Louis O'Shaughnessy Hall:VA, [12077]]
+797:  [Clinton Cowgill Hall:VA, [8906]]
+815:  [Smyth Hall:VA, [4423]]
+820:  [Virginia Polytechnic Institute and State University:VA, [265]]
+821:  [G Burke Johnston Student Center:VA, [10028]]
+828:  [Jamerson Athletic Center:VA, [2229]]
+834:  [J H Shultz Hall:VA, [10853]]
+837:  [Food Science and Technology Building:VA, [9604]]
+843:  [Cheatham Hall:VA, [1056]]
+862:  [Al Payne Hall:VA, [7535]]
+871:  [Lingan Randolph Hall:VA, [11942]]
+878:  [Mosely Practice Field:VA, [2879]]
+882:  [Media Building:VA, [12613]]
+883:  [Miles Hall:VA, [2754]]
+896:  [Davidson Hall:VA, [1312]]
+920:  [Lane Stadium:VA, [796]]
+923:  [Torgersen Hall:VA, [6543]]
+930:  [Harvey Price Hall:VA, [10323]]
+935:  [English Baseball Field:VA, [9469]]
+939:  [J Ambler Johnston Hall:VA, [10716]]
+948:  [Clarice Slusher Pritchard Hall:VA, [8633]]
+951:  [Cranwell International Center:VA, [9037]]
+959:  [Herbert J Thomas Hall:VA, [10455]]
+962:  [Johnson Hall:VA, [2368]]
+968:  [Robert Pamplin Senior and Robert Pamplin Junior Hall:VA, [6114]]
+983:  [Cassell Coliseum:VA, [8364]]
+997:  [Hillcrest Hall:VA, [10591]]
+--------------------------------------------------------------------------------
+;
+; Exit
+Command 4:  quit	
+
+Terminating execution of commands.
+End time: Thu Apr 18 16:08:39 EDT 2013
+--------------------------------------------------------------------------------

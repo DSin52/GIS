@@ -45,29 +45,40 @@ public class HashTable {
 	 *            offset from database file
 	 */
 	public void insert(String key, long filePointerRef) {
-		// probeSequence = 0;
-		if (currentSize > .7 * entries.length) {
-			rehash();
-		}
+		System.out.println(currentSize);
 		int i;
 		for (i = 0; i < entries.length; ++i) {
 			int currentPos = quadProbe(key, i);
-
 			if (entries[currentPos] == null) {
 				entries[currentPos] = new HashEntry(key, filePointerRef);
 				++currentSize;
 				break;
-				// return;
 			} else if (entries[currentPos].key.equals(key)) {
+				for (long offset : entries[currentPos].offsets) {
+					if (filePointerRef == offset) {
+						return;
+					}
+				}
 				entries[currentPos].offsets.add(filePointerRef);
-				++currentSize;
 				break;
 			}
 		}
 		probeSequence = Math.max(probeSequence, i);
 
+		if (currentSize > .7 * entries.length) {
+			rehash();
+		}
 	}
 
+	/**
+	 * Quadratic probing technique for hash table.
+	 * 
+	 * @param key
+	 *            key being inserted
+	 * @param i
+	 *            number of steps
+	 * @return quadratic probed location
+	 */
 	private int quadProbe(String key, int i) {
 		return (elfHash(key) + (i * i + i) / 2) % entries.length;
 	}
@@ -90,6 +101,9 @@ public class HashTable {
 		}
 	}
 
+	/**
+	 * Makes a larger array for more items.
+	 */
 	public void rehash() {
 		HashEntry[] oldRef = entries;
 		allocateSize(oldRef.length);
@@ -122,15 +136,23 @@ public class HashTable {
 		return (((int) hashValue) % entries.length);
 	}
 
+	/**
+	 * Returns all of the offsets that have the same key.
+	 * 
+	 * @param key
+	 *            key being searched
+	 * @return offsets that relate to the key
+	 */
 	public ArrayList<Long> getList(String key) {
 		ArrayList<Long> list = new ArrayList<Long>();
 		int index = elfHash(key) % entries.length;
+		int offset = index;
 		int step = 1;
 		while (entries[index] != null) {
 			if (entries[index].key.equals(key)) {
 				return entries[index].offsets;
 			}
-			index = index + (((step * step) + step) / 2) % entries.length;
+			index = offset + (((step * step) + step) / 2) % entries.length;
 			step++;
 		}
 		return list;
@@ -145,10 +167,20 @@ public class HashTable {
 		return entries.length;
 	}
 
+	/**
+	 * Returns the probe sequence.
+	 * 
+	 * @return sequences of probing taken
+	 */
 	public int getProbeSequence() {
 		return probeSequence;
 	}
 
+	/**
+	 * Return number of elements in the hash table.
+	 * 
+	 * @return number of elements in hash table
+	 */
 	public int getFilled() {
 		return currentSize;
 	}

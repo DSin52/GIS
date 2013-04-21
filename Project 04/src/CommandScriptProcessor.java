@@ -112,7 +112,7 @@ public class CommandScriptProcessor {
 								+ "\r\nLongest probe sequence:\t\t"
 								+ scriptProc.hashTable.getProbeSequence()
 								+ "\r\nImported Locations:\t\t"
-								+ scriptProc.hashTable.getFilled() + "\r\n"
+								+ scriptProc.getImportedFilesNum() + "\r\n"
 								+ seperator + "\r\n");
 						break;
 

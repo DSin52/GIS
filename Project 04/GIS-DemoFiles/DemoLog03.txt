@@ -1,0 +1,97 @@
+; Demo script 3
+;
+; Test of multiple import commands with a couple of tiny DB files.
+;
+; Specify boundaries of coordinate space:
+world	0800400W	0792100W	375230N	383530N
+
+GIS Program
+
+dbFile:     demoDB03.txt
+script:     DemoScript03.txt
+log:        DemoLog03.txt
+Start time: Thu Apr 18 16:14:03 EDT 2013
+Quadtree children are printed in the order SW  SE  NE  NW
+--------------------------------------------------------------------------------
+
+Latitude/longitude values in index entries are shown as signed integers, in total seconds.
+
+World boundaries are set to:
+              138930
+   -288240                -285660
+              136350
+--------------------------------------------------------------------------------
+;
+; Import a smallish DB file:
+Command 1:  import	VA_Highland.txt
+
+Imported Features by name: 289
+Longest probe sequence:    3
+Imported Locations:        289
+--------------------------------------------------------------------------------
+;
+; Check the location and name/state indices:
+;debug	quad
+;debug	hash
+;
+; Import another smallish DB file:
+Command 2:  import	VA_Bath.txt
+
+Imported Features by name: 520
+Longest probe sequence:    12
+Imported Locations:        520
+--------------------------------------------------------------------------------
+;
+; Check the location and name/state indices:
+;debug	quad
+;debug	hash
+;
+; Try a couple of region searches:
+Command 3:  what_is_in	381257N	0794039W	120	60
+
+   The following 8 features were found in (794039W +/- 60, 381257N +/- 120)
+3166:  Bolar Spring  VA  381259N  794025W
+48096:  Bolar Gap  VA  381308N  794053W
+69439:  Little Valley  VA  381303N  794040W
+69589:  Little Valley Run  VA  381303N  794040W
+99041:  Bolar  VA  381302N  794035W
+106798:  Bolar Methodist Church (historical)  VA  381257N  794039W
+108854:  Set Free Christian Fellowship Church  VA  381257N  794039W
+99417:  White Rock Mountain  VA  381126N  793939W
+--------------------------------------------------------------------------------
+Command 4:  what_is_in	381621N	0794457W	1200	30
+
+   The following 25 features were found in (794457W +/- 30, 381621N +/- 1200)
+8661:  Erwin Draft  VA  381727N  794429W
+27420:  Townsend Draft  VA  381710N  794447W
+39235:  Warwick Run  VA  381710N  794447W
+39100:  Buckeye (historical)  VA  381705N  794452W
+8201:  Dry Run  VA  381634N  794456W
+16650:  Lower Gap  VA  381545N  794503W
+40040:  Eowyns Run  VA  381621N  794457W
+3456:  Bridge Hollow  VA  381557N  794523W
+13557:  Kent Simmons Hollow  VA  381546N  794526W
+57779:  Doyle Cemetery  VA  381436N  794520W
+52797:  Cave Run  VA  381004N  794455W
+81419:  Rocky Run  VA  381028N  794432W
+81302:  Rocky Ridge  VA  380908N  794456W
+75672:  Muddy Run Spring  VA  380623N  794503W
+48501:  Bonner Mountain  VA  380500N  794501W
+85326:  Piney Mountain Trail  VA  380516N  794501W
+92586:  Warm Springs Mountain Trail  VA  380513N  794442W
+87573:  South Piney Mountain Trail  VA  380340N  794429W
+105775:  White Rocks  VA  380506N  794513W
+104386:  Jordan Top  VA  380302N  794502W
+106422:  Bath Alum Camp (historical)  VA  380249N  794435W
+42530:  Barney Run  VA  380145N  794500W
+40855:  Stouts Creek  VA  375915N  794500W
+60625:  Gillam Run  VA  375735N  794518W
+76676:  Oak Grove Church  VA  375736N  794516W
+--------------------------------------------------------------------------------
+;
+; Exit
+Command 5:  quit	
+
+Terminating execution of commands.
+End time: Thu Apr 18 16:14:04 EDT 2013
+--------------------------------------------------------------------------------
